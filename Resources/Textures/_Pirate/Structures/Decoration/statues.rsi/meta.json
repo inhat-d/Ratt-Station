@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "license": "CC-BY-SA-3.0",
+    "copyright": "Sprite by: hatt.ratt (discord) or inhat-d (github)",
+    "size": {
+        "x": 122,
+        "y": 157
+    },
+    "states": [
+        {
+            "name": "atom_statue",
+            "delays": [
+                [
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.4,
+                    0.7
+                ]
+            ]
+        }
+    ]
+}
