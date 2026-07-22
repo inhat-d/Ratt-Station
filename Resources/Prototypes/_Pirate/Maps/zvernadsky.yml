@@ -1,0 +1,20 @@
+- type: gameMap
+  id: ZVernadskyStation
+  mapName: '(!ТЕСТ, НЕ ДЛЯ РП!) Станція ім. Вернадського'
+  mapPath: /Maps/Test/ZVernadsky0.yml
+  minPlayers: 0
+  maxPlayers: 10
+  stations:
+    Empty:
+      stationProto: StandardNanotrasenStation
+      components:
+      - type: StationNameSetup
+        mapNameTemplate: "Науково-дослідницька станція ім. Вернадського"
+      - type: StationJobs
+        availableJobs:
+          Passenger: [ -1, -1 ] # DON'T FORGET ABOUT THIS!!!!!!!!!
+      - type: CEStationZLevels
+        mapsAbove:
+        - /Maps/Test/ZVernadsky1.yml
+        - /Maps/Test/ZVernadsky2.yml
+        - /Maps/Test/ZVernadsky3.yml
