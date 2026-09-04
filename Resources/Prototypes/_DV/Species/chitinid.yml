@@ -8,6 +8,7 @@
   markingLimits: MobChitinidMarkingLimits
   dollPrototype: MobChitinidDummy
   skinColoration: Hues
+  knowledge: Human # Pirate
   maleFirstNames: NamesChitinidFirstMale
   femaleFirstNames: NamesChitinidFirstFemale
   naming: First
@@ -68,6 +69,13 @@
       points: 1
       required: false
     Chest:
+      points: 1
+      required: false
+    # Pirate: enable underwear customization.
+    UndergarmentTop:
+      points: 1
+      required: false
+    UndergarmentBottom:
       points: 1
       required: false
     RightLeg:

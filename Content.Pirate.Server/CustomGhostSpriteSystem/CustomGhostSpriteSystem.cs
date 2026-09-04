@@ -13,7 +13,6 @@ public sealed class CustomGhostSpriteSystem : EntitySystem
     [Dependency] private readonly SharedAppearanceSystem _appearanceSystem = default!;
     [Dependency] private readonly MetaDataSystem _metaData = default!;
 
-
     public override void Initialize()
     {
         base.Initialize();
@@ -29,7 +28,7 @@ public sealed class CustomGhostSpriteSystem : EntitySystem
     }
 
 
-    public void TrySetCustomSprite(EntityUid ghostUid, string ckey)
+    public bool TrySetCustomSprite(EntityUid ghostUid, string ckey)
     {
         var prototypes = _prototypeManager.EnumeratePrototypes<CustomGhostPrototype>();
 
@@ -100,6 +99,10 @@ public sealed class CustomGhostSpriteSystem : EntitySystem
                     CustomGhostAppearance.Sprite,
                     spriteData);
 
+                _appearanceSystem.SetData(ghostUid,
+                    CustomGhostAppearance.MaxSize,
+                    customGhostPrototype.MaxSize);
+
                 if (customGhostPrototype.AlphaOverride > 0)
                 {
                     _appearanceSystem.SetData(ghostUid,
@@ -110,17 +113,17 @@ public sealed class CustomGhostSpriteSystem : EntitySystem
                 if (customGhostPrototype.GhostName != string.Empty)
                 {
                     _metaData.SetEntityName(ghostUid, customGhostPrototype.GhostName);
-                    // MetaData(ghostUid).EntityName = customGhostPrototype.GhostName;
                 }
 
                 if (customGhostPrototype.GhostDescription != string.Empty)
                 {
                     _metaData.SetEntityDescription(ghostUid, customGhostPrototype.GhostDescription);
-                    // MetaData(ghostUid).EntityDescription = customGhostPrototype.GhostDescription;
                 }
 
-                return;
+                return true;
             }
         }
+
+        return false;
     }
 }

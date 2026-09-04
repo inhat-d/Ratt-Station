@@ -8,6 +8,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Client.UserInterface.XAML;
 using Robust.Client.Utility;
 using Robust.Client.Player; // Pirate ckey for restricted players
+using Robust.Shared.Prototypes; // Pirate - Marking coloration clamp
 
 namespace Content.Client.Humanoid;
 
@@ -17,6 +18,7 @@ public sealed partial class SingleMarkingPicker : BoxContainer
     [Dependency] private readonly MarkingManager _markingManager = default!;
     [Dependency] private readonly IEntityManager _entityManager = default!;
     [Dependency] private readonly IPlayerManager _playerManager = default!; // Pirate ckey for restricted players
+    [Dependency] private readonly IPrototypeManager _prototypeManager = default!; // Pirate - Marking coloration clamp
 
     private readonly SpriteSystem _sprite;
 
@@ -161,7 +163,7 @@ public sealed partial class SingleMarkingPicker : BoxContainer
         _totalPoints = totalPoints;
 
         var ckey = _playerManager.LocalSession?.Name; // Pirate ckey for restricted players
-        _markingPrototypeCache = _markingManager.MarkingsByCategoryAndSpecies(Category, _species, ckey); // Pirate ckey for restricted players
+        _markingPrototypeCache = ResolveCategoryMarkings(ckey); // Pirate: slime morph - IgnoreSpecies support
 
         Visible = _markingPrototypeCache.Count != 0;
         if (_markingPrototypeCache.Count == 0)
@@ -182,7 +184,7 @@ public sealed partial class SingleMarkingPicker : BoxContainer
         }
 
         var ckey = _playerManager.LocalSession?.Name; // Pirate ckey for restricted players
-        _markingPrototypeCache ??= _markingManager.MarkingsByCategoryAndSpecies(Category, _species, ckey); // Pirate ckey for restricted players
+        _markingPrototypeCache ??= ResolveCategoryMarkings(ckey); // Pirate: slime morph - IgnoreSpecies support
 
         MarkingSelectorContainer.Visible = _markings != null && _markings.Count != 0;
         if (_markings == null || _markings.Count == 0)
@@ -192,14 +194,22 @@ public sealed partial class SingleMarkingPicker : BoxContainer
 
         MarkingList.Clear();
 
-        var sortedMarkings = _markingPrototypeCache.Where(m =>
+        var filtered = _markingPrototypeCache.Where(m =>
             m.Key.ToLower().Contains(filter.ToLower()) ||
-            GetMarkingName(m.Value).ToLower().Contains(filter.ToLower())
-        ).OrderBy(p => Loc.GetString($"marking-{p.Key}"));
+            GetMarkingName(m.Value).ToLower().Contains(filter.ToLower()));
+
+        // Pirate: slime morph - name sorting
+        var sortedMarkings = GradientContext != null
+            ? filtered.OrderBy(p => HasCyrillicName(Loc.GetString($"marking-{p.Key}")) ? 0 : 1)
+                .ThenBy(p => Loc.GetString($"marking-{p.Key}"))
+            : filtered.OrderBy(p => Loc.GetString($"marking-{p.Key}"));
 
         foreach (var (id, marking) in sortedMarkings)
         {
-            var item = MarkingList.AddItem(Loc.GetString($"marking-{id}"), _sprite.Frame0(marking.Sprites[0]));
+            if (GetMarkingTexture(marking) is not { } texture) // Pirate - shader markings borrow the hair icon
+                continue;
+
+            var item = MarkingList.AddItem(Loc.GetString($"marking-{id}"), texture);
             item.Metadata = marking.ID;
 
             if (_markings[Slot].MarkingId == id)
@@ -224,13 +234,23 @@ public sealed partial class SingleMarkingPicker : BoxContainer
 
         ColorSelectorContainer.RemoveAllChildren();
 
-        if (marking.MarkingColors.Count != proto.Sprites.Count)
+        if (marking.MarkingColors.Count != proto.ColorCount) // Pirate - shader markings have no sprites
         {
-            marking = new Marking(marking.MarkingId, proto.Sprites.Count);
+            marking = new Marking(marking.MarkingId, proto.ColorCount);
         }
 
         for (var i = 0; i < marking.MarkingColors.Count; i++)
         {
+            // Pirate start - hair gradients: a shader-parameter layer (blur/proportion) gets named sliders,
+            // not a color wheel. Ordinary layers return false here and fall through to the wheel below.
+            var shaderBox = new BoxContainer { Orientation = BoxContainer.LayoutOrientation.Vertical };
+            if (TryCreateShaderParamSliders(proto, i, marking, shaderBox))
+            {
+                ColorSelectorContainer.AddChild(shaderBox);
+                continue;
+            }
+            // Pirate end - hair gradients
+
             var selector = new ColorSelectorSliders
             {
                 HorizontalExpand = true
@@ -242,6 +262,7 @@ public sealed partial class SingleMarkingPicker : BoxContainer
             selector.OnColorChanged += color =>
             {
                 marking.SetColor(colorIndex, color);
+                MarkingColoration.Clamp(marking, _prototypeManager); // Pirate - Marking coloration clamp
                 OnColorChanged!((_slot, marking));
             };
 

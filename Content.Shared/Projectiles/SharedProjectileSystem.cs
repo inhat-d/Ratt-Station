@@ -58,7 +58,13 @@ public abstract partial class SharedProjectileSystem : EntitySystem
         if (embeddable.Comp.RemovalTime == null)
             return;
 
-        if (args.Handled || !args.Complex || !TryComp<PhysicsComponent>(embeddable, out var physics) ||
+        // Pirate - If not embedded yet and another system already handled the event, skip.
+        // When embedded, always allow removal even if another handler (e.g. ItemToggle)
+        // consumed the activation — the player must be able to pull the weapon out.
+        if (embeddable.Comp.EmbeddedIntoUid == null && args.Handled)
+            return;
+
+        if (!args.Complex || !TryComp<PhysicsComponent>(embeddable, out var physics) ||
             physics.BodyType != BodyType.Static)
             return;
 
@@ -274,8 +280,7 @@ public sealed class ImpactEffectEvent : EntityEventArgs
 /// Raised when an entity is just about to be hit with a projectile but can reflect it
 /// </summary>
 [ByRefEvent]
-// Pirate: gunplay
-public record struct ProjectileReflectAttemptEvent(EntityUid ProjUid, ProjectileComponent Component, bool Cancelled, EntityUid Target) : IInventoryRelayEvent
+public record struct ProjectileReflectAttemptEvent(EntityUid ProjUid, ProjectileComponent Component, bool Cancelled) : IInventoryRelayEvent
 {
     SlotFlags IInventoryRelayEvent.TargetSlots => SlotFlags.WITHOUT_POCKET;
 }

@@ -44,7 +44,7 @@
   recipeUnlocks:
   - ClothingMaskMuzzleSecure
   - ClothingMaskMuzzleShock
-  position: 1,1
+  position: 1,2
   technologyPrerequisites:
   - SalvageWeapons
 
@@ -83,7 +83,7 @@
   - GygaxLLeg
   - GygaxRArm
   - GygaxRLeg
-#  - GygaxCentralElectronics
+  - GygaxCentralElectronics
   - GygaxPeripheralsElectronics
   - GygaxTargetingElectronics
   - WeaponMechCombatUltraRifle
@@ -180,7 +180,7 @@
   - DurandLLeg
   - DurandRArm
   - DurandRLeg
-#  - DurandCentralElectronics
+  - DurandCentralElectronics
   - DurandPeripheralsElectronics
   - DurandTargetingElectronics
   - WeaponMechCombatShotgun

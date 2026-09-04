@@ -58,13 +58,23 @@
   parent: ClothingEyesBase # goobstation - tider nation - no longer contra
   id: ClothingEyesGlassesMeson
   name: meson goggles # goobstation - they're called MESONS!!!!
-  description: Green-tinted goggles using a proprietary polymer that provides protection from eye damage of all types.
+  description: Green-tinted goggles that use mesons to reveal sub-floor infrastructure. # Pirate: meson vision
   components:
   - type: Sprite
     sprite: Clothing/Eyes/Glasses/meson.rsi
   - type: Clothing
     sprite: Clothing/Eyes/Glasses/meson.rsi
-  - type: EyeProtection
+  # Pirate: meson vision - always on.
+  - type: TrayScanner
+    range: 10
+    enabled: true
+    toggleOnActivate: false # Pirate: meson vision
+  - type: GoggleShader
+    shader: Goggles
+    color: "#5AB43CCC"
+    enabled: true
+  - type: StaticPrice # Pirate: meson vision - price
+    price: 50
   - type: IdentityBlocker
     coverage: EYES
   - type: Tag
@@ -73,6 +83,7 @@
     - MesonGoggles
     - WhitelistChameleon
     - PetWearable # Goobstation?
+    - SecDogWearable # Pirate: K9 units may wear these goggles
 
 - type: entity
   parent: ClothingEyesBase
@@ -152,6 +163,7 @@
     - CorgiWearable
     - PetWearable # Goobstation?
     - WhitelistChameleon
+    - SecDogWearable # Pirate: K9 units may wear these glasses
   - type: IdentityBlocker
     coverage: EYES
 
@@ -171,6 +183,7 @@
     - PetWearable # Goobstation?
     - HamsterWearable
     - WhitelistChameleon
+    - SecDogWearable # Pirate: K9 units may wear these glasses
 
 - type: entity
   parent: [ClothingEyesBase, ShowSecurityIcons, BaseSecurityContraband]
@@ -194,6 +207,7 @@
     - CorgiWearable
     - PetWearable # Goobstation?
     - WhitelistChameleon
+    - SecDogWearable # Pirate: K9 units may wear these glasses
   - type: GuideHelp
     guides:
     - Security
@@ -346,8 +360,16 @@
     sprite: Clothing/Eyes/Glasses/ninjavisor.rsi
   - type: FlashImmunity
     # Goob start
-  - type: NightVision
-    isEquipment: true
+  - type: MonolithNightVision # Gen 4 quadtube-wide
+    relayOverlay: true
+    goggleEffect: true
+    viewCircleRadius: 450
+    viewCircleCount: 4
+    viewCircleSpacing: 280
+    action: MonolithToggleNightVision
+    phosphorColor: "#41D7D9"
+    lightingColor: "#FFFFFF26"
+    amplification: 18
   - type: Armor
     coverage:
     - Head

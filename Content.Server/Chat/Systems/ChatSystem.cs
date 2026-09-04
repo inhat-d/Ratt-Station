@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using Content.Server._Goobstation.Wizard.Systems;
+using Content.Server._Pirate.ListeningPost.Components; // Pirate: listening post receive-only interception
 using Content.Server.Administration.Logs;
 using Content.Server.Administration.Managers;
 using Content.Server.Effects;
@@ -48,7 +49,7 @@ using Robust.Shared.Prototypes;
 using Robust.Shared.Random;
 using Robust.Shared.Replays;
 using Robust.Shared.Utility;
-using Content.Pirate.Common._EinsteinEngines.Chat;
+using Content.Pirate.Shared.Psionics;
 using Content.Shared._RMC14.CCVar;
 
 namespace Content.Server.Chat.Systems;
@@ -75,7 +76,6 @@ public sealed partial class ChatSystem : SharedChatSystem
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly ReplacementAccentSystem _wordreplacement = default!;
     [Dependency] private readonly ExamineSystemShared _examineSystem = default!;
-    [Dependency] private readonly ITelepathicChatSystem _telepath = default!; // Goobstation Change (now interface-based)
     [Dependency] private readonly GhostVisibilitySystem _ghostVisibility = default!; // Goobstation Change
     [Dependency] private readonly ScryingOrbSystem _scrying = default!; // Goobstation Change
     [Dependency] private readonly CollectiveMindUpdateSystem _collectiveMind = default!; // Goobstation - Starlight collective mind port
@@ -338,7 +338,8 @@ public sealed partial class ChatSystem : SharedChatSystem
                 break;
             case InGameICChatType.Telepathic:
                 var senderName = nameOverride ?? Name(source);
-                _telepath.SendTelepathicChat(source, message, senderName, range == ChatTransmitRange.HideChat);
+                // Pirate: keep psionic chat implementation in Content.Pirate.Server.
+                RaiseLocalEvent(source, new SendTelepathicChatEvent(source, message, senderName, range == ChatTransmitRange.HideChat), true);
                 break;
         }
     }
@@ -483,6 +484,13 @@ public sealed partial class ChatSystem : SharedChatSystem
     {
         if (_mobStateSystem.IsDead(source) || collectiveMind == null || message == "" || !TryComp<CollectiveMindComponent>(source, out var sourseCollectiveMindComp) || !sourseCollectiveMindComp.Minds.ContainsKey(collectiveMind.ID))
             return;
+
+        // Pirate: listening post operatives may intercept Binary but cannot impersonate silicons on it.
+        if (TryComp<ReceiveOnlyCollectiveMindComponent>(source, out var receiveOnly) &&
+            receiveOnly.Channel.Id == collectiveMind.ID)
+        {
+            return;
+        }
 
         var clients = Filter.Empty();
         var clientsSeeNames = Filter.Empty();

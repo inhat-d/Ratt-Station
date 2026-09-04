@@ -10,6 +10,7 @@
   markingLimits: MobHydrakinMarkingLimits
   dollPrototype: MobHydrakinDummy
   skinColoration: Hues
+  knowledge: Human # Pirate
   maleFirstNames: NamesHydrakin
   femaleFirstNames: NamesHydrakin
   naming: FirstDashFirst
@@ -63,6 +64,13 @@
       defaultMarkings: [ HydrakinEarsDefault ]
     Chest:
       points: 4
+      required: false
+    # Pirate: enable underwear customization.
+    UndergarmentTop:
+      points: 1
+      required: false
+    UndergarmentBottom:
+      points: 1
       required: false
     Legs:
       points: 8 # imp 2<8

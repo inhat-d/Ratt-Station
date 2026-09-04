@@ -36,6 +36,10 @@
   - type: PhysicalComposition
     materialComposition:
       Steel: 50 #Half of a regular steel sheet to reflect the crafting recipe
+  # Pirate: rod refining - weld 2 rods back into a sheet, reversing the 1 steel -> 2 rods recipe (SS13 rods.dm welder_act)
+  - type: StackRefinable
+    refineResult: SheetSteel1
+    cost: 2
   - type: Stack
     stackType: MetalRod
     baseLayer: base
@@ -78,6 +82,12 @@
   - type: GuideHelp
     guides:
     - ExpandingRepairingStation
+  - type: Tag # Pirate: Lock path ritual ingredient.
+    tags:
+    - ConstructionMaterial
+    - DroneUsable
+    - PartBase
+    - RodMetal
 
 - type: entity
   parent: PartRodMetal
@@ -89,6 +99,8 @@
     tags:
     - ConstructionMaterial
     - DroneUsable # Goobstation
+    - PartBase # Goobstation
+    - RodMetal # Pirate: Lock path ritual ingredient.
   - type: Sprite
     state: rods
   - type: Stack
@@ -104,6 +116,8 @@
     tags:
     - ConstructionMaterial
     - DroneUsable # Goobstation
+    - PartBase # Goobstation
+    - RodMetal # Pirate: Lock path ritual ingredient.
   - type: Sprite
     state: rods
   - type: Stack

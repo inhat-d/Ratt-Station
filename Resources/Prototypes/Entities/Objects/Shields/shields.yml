@@ -7,6 +7,8 @@
   description: A shield!
   abstract: true
   components:
+    - type: WeaponClass # Pirate
+      class: Shield
     - type: Sprite
       sprite: Objects/Weapons/Melee/shields.rsi
       state: riot-icon
@@ -433,6 +435,7 @@
       reflectProb: 0.95
       reflects:
         - Energy
+    - type: ReflectiveSurface # Pirate - Heretic Lock Path
     - type: Blocking #Mirror shield reflects heat/laser, but is relatively weak to everything else.
       passiveBlockModifier:
         coefficients:

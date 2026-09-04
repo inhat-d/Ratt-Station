@@ -1,8 +1,8 @@
 using System.Numerics;
 using Content.Shared._Goobstation.Wizard.Projectiles;
-using Content.Shared._Pirate.Projectiles;
 using Content.Shared._Pirate.Weapons.Melee.Components;
 using Content.Shared._Pirate.Weapons.Ranged.Events;
+using Content.Shared._Pirate.Parry;
 using Content.Shared._Shitmed.ItemSwitch;
 using Content.Shared._Shitmed.ItemSwitch.Components;
 using Content.Shared.Clothing.Components;
@@ -178,25 +178,40 @@ public sealed class TimedDeflectBlockSystem : EntitySystem
         if (args.Cancelled || args.Type != HarmfulActionType.Harm)
             return;
 
-        if (!TryGetActiveDeflectWeapon(ent, out var weapon, out var block) || block == null)
-            return;
-
-         if (!ApplyDefense(ent.Owner, weapon, block, args.User, GetDamageTotal(args.Damage), projectile: null, isRanged: false, out _))
-            return;
-
-        args.Cancel();
-
-        // If the attacker was wielding a TimedDeflectBlock weapon, break their grip —
-        // a blocked swing counts as "reaching the target" for the wield-break rule.
-        // BeforeHarmfulActionEvent is shared, but wield state is server-authoritative.
-        if (_net.IsServer &&
-            _hands.TryGetActiveItem(args.User, out var attackerWeapon) &&
-            TryComp<TimedDeflectBlockComponent>(attackerWeapon, out _) &&
-            TryComp<WieldableComponent>(attackerWeapon, out var attackerWieldable) &&
-            attackerWieldable.Wielded)
+        if (TryGetActiveDeflectWeapon(ent, out var weapon, out var block) &&
+            block != null &&
+            ApplyDefense(
+                ent.Owner,
+                weapon,
+                block,
+                args.User,
+                GetDamageTotal(args.Damage),
+                projectile: null,
+                isRanged: false,
+                out _))
         {
-            _wieldable.TryUnwield(attackerWeapon.Value, attackerWieldable, args.User, force: true);
+            args.Cancel();
+
+            // If the attacker was wielding a TimedDeflectBlock weapon, break their grip —
+            // a blocked swing counts as "reaching the target" for the wield-break rule.
+            // BeforeHarmfulActionEvent is shared, but wield state is server-authoritative.
+            if (_net.IsServer &&
+                _hands.TryGetActiveItem(args.User, out var attackerWeapon) &&
+                TryComp<TimedDeflectBlockComponent>(attackerWeapon, out _) &&
+                TryComp<WieldableComponent>(attackerWeapon, out var attackerWieldable) &&
+                attackerWieldable.Wielded)
+            {
+                _wieldable.TryUnwield(attackerWeapon.Value, attackerWieldable, args.User, force: true);
+            }
+
+            return;
         }
+
+        // Pirate: use this single hands subscription to relay Trauma-style parrying too.
+        var parry = new ParryAttemptEvent(args.User);
+        RaiseLocalEvent(ent.Owner, parry);
+        if (parry.Cancelled)
+            args.Cancel();
     }
 
     private void OnProjectileReflectAttempt(
@@ -212,13 +227,13 @@ public sealed class TimedDeflectBlockSystem : EntitySystem
 
         if (ent.Comp.DeflectToSource &&
             args.Args.Component.Shooter is { } shooter &&
-            TryDeflectProjectileToSource(args.Args.Target, ent.Owner, ent.Comp, shooter, GetDamageTotal(args.Args.Component.Damage), args.Args.ProjUid, args.Args.Component))
+            TryDeflectProjectileToSource(args.Source, ent.Owner, ent.Comp, shooter, GetDamageTotal(args.Args.Component.Damage), args.Args.ProjUid, args.Args.Component))
         {
             args.Args.Cancelled = true;
             return;
         }
 
-        if (!ApplyDefense(args.Args.Target, ent.Owner, ent.Comp, args.Args.Component.Shooter, GetDamageTotal(args.Args.Component.Damage), args.Args.ProjUid, isRanged: true, out _))
+        if (!ApplyDefense(args.Source, ent.Owner, ent.Comp, args.Args.Component.Shooter, GetDamageTotal(args.Args.Component.Damage), args.Args.ProjUid, isRanged: true, out _))
             return;
 
         args.Args.Cancelled = true;
@@ -233,12 +248,12 @@ public sealed class TimedDeflectBlockSystem : EntitySystem
             args.Args.Shooter == null ||
             !TryComp<WieldableComponent>(ent, out var wieldable) ||
             !wieldable.Wielded ||
-            !TryApplyDirectedDeflect(args.Args.Target, ent.Owner, ent.Comp, args.Args.Shooter.Value, GetDamageTotal(args.Args.Damage), isRanged: true))
+            !TryApplyDirectedDeflect(args.Source, ent.Owner, ent.Comp, args.Args.Shooter.Value, GetDamageTotal(args.Args.Damage), isRanged: true))
         {
             return;
         }
 
-        var direction = GetDirectionToEntity(args.Args.Target, args.Args.Shooter.Value);
+        var direction = GetDirectionToEntity(args.Source, args.Args.Shooter.Value);
         args.Args.Direction = direction == Vector2.Zero
             ? -args.Args.Direction
             : direction;
@@ -442,11 +457,7 @@ public sealed class TimedDeflectBlockSystem : EntitySystem
         RevealDefender(defender);
 
         if (projectile is { } projectileUid && !Deleted(projectileUid))
-        {
-            var deleteEv = new DeletingProjectileEvent(projectileUid);
-            RaiseLocalEvent(ref deleteEv);
             PredictedQueueDel(projectileUid);
-        }
 
         return true;
     }

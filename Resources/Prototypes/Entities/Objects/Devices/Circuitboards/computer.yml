@@ -90,6 +90,8 @@
       state: cpu_security
     - type: ComputerBoard
       prototype: ComputerCriminalRecords
+    - type: StealTarget # Pirate
+      stealGroup: CriminalRecordsComputerCircuitboard
 
 - type: entity
   parent: BaseComputerCircuitboard
@@ -117,6 +119,9 @@
     - type: Tag
       tags:
       - DroneUsable # Goobstation
+      - QMBoard # Pirate: Trauma revolutionary analyzer construction.
+    - type: StealTarget # Pirate
+      stealGroup: CargoRequestComputerCircuitboard
 
 - type: entity
   parent: BaseComputerCircuitboard
@@ -316,6 +321,8 @@
       state: cpu_science
     - type: ComputerBoard
       prototype: ComputerResearchAndDevelopment
+    - type: StealTarget # Pirate
+      stealGroup: ResearchComputerCircuitboard
 
 - type: entity
   parent: BaseComputerCircuitboard

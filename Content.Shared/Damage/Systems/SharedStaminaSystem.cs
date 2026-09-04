@@ -207,8 +207,9 @@ public abstract partial class SharedStaminaSystem : EntitySystem
         foreach (var (ent, comp) in toHit)
         {
             // Pirate: Starlight terror spiders use this to modify incoming melee stamina damage while web-stealthed.
-            var staminaMeleeHitEvent = new StaminaMeleeHitEvent(args.User, args.Weapon, args.Direction);
+            var staminaMeleeHitEvent = new StaminaMeleeHitEvent(args.User, args.Weapon, ent, args.Direction);
             RaiseLocalEvent(ent, staminaMeleeHitEvent);
+            RaiseLocalEvent(args.Weapon, staminaMeleeHitEvent);
 
             var hitEvent = new BeforeStaminaDamageEvent(1f);
             // raise event for each entity hit
@@ -475,7 +476,8 @@ public abstract partial class SharedStaminaSystem : EntitySystem
                     comp,
                     source: GetEntity(source),
                     visual: false,
-                    ignoreResist: !applyResistances); // todo unfuck this shit. goob.
+                    ignoreResist: !applyResistances, // todo unfuck this shit. goob.
+                    logDamage: false); // Pirate - Continuous drains would otherwise flood admin logs.
 
             // Shouldn't need to consider paused time as we're only iterating non-paused stamina components.
             var nextUpdate = comp.NextUpdate;
@@ -518,6 +520,11 @@ public abstract partial class SharedStaminaSystem : EntitySystem
         }
 
         component.Critical = true;
+
+        // Pirate: allow grapples and other downstream mechanics to react to stamina crit.
+        var staminaCritEvent = new EnterStaminaCritEvent();
+        RaiseLocalEvent(uid, ref staminaCritEvent);
+
         component.StaminaDamage = component.CritThreshold;
 
         if (StunSystem.TryUpdateParalyzeDuration(uid, component.StunTime))

@@ -28,6 +28,9 @@
         ents: []
   - type: UserInterface
     interfaces:
+      # Pirate: slime morph
+      enum.SlimeMorphUiKey.Key:
+        type: SlimeMorphBoundUserInterface
       enum.VoiceMaskUIKey.Key:
         type: VoiceMaskBoundUserInterface
       enum.StorageUiKey.Key:
@@ -78,6 +81,7 @@
     damageContainer: Biological
     damageModifierSet: Slime
   - type: Geras # Pirate
+  - type: SlimeMorph # Pirate: slime morph
   - type: PassiveDamage # Around 8 damage a minute healed
     allowedStates:
     - Alive
@@ -125,7 +129,7 @@
         - !type:HasComponentOnEquipmentCondition # goob edit - make suits protect slimes from water damage
           components:
           - type: PressureProtection
-          invert: true
+          inverted: true
       - !type:PopupMessage
         type: Local
         visualType: Large
@@ -135,7 +139,7 @@
         - !type:HasComponentOnEquipmentCondition # goob edit - make suits protect slimes from water damage
           components:
           - type: PressureProtection
-          invert: true
+          inverted: true
   - type: Butcherable
     butcheringType: Spike
     spawned:

@@ -4,9 +4,6 @@ using Robust.Shared.Utility;
 
 namespace Content.Pirate.Shared.CustomGhostSystem;
 
-/// <summary>
-/// This is a prototype for...
-/// </summary>
 [DataDefinition]
 [Prototype("customGhost")]
 public sealed partial class CustomGhostPrototype : IPrototype
@@ -24,6 +21,10 @@ public sealed partial class CustomGhostPrototype : IPrototype
     [DataField("alpha")]
     public float AlphaOverride { get; set; } = -1;
 
+    /// <summary>Multiplier for the server-wide pixel limit; 0 disables it.</summary>
+    [DataField("maxSize")]
+    public float MaxSize { get; set; } = 1f;
+
     [DataField("ghostName")]
     public string GhostName = string.Empty;
 
@@ -35,5 +36,7 @@ public sealed partial class CustomGhostPrototype : IPrototype
 public enum CustomGhostAppearance
 {
     Sprite,
-    AlphaOverride
+    AlphaOverride,
+    /// <summary>Prototype size multiplier applied by the client.</summary>
+    MaxSize
 }

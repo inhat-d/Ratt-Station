@@ -73,7 +73,7 @@
     sprite: Objects/Specific/Service/vending_machine_restock.rsi
     state: base
   product: CrateVendingMachineRestockEngineeringFilled
-  cost: 3200
+  cost: 3500 # Pirate: welding visor & mesonds - cover the expanded EngiVend inventory value
   category: cargoproduct-category-name-engineering
   group: market
 
@@ -83,7 +83,7 @@
     sprite: Objects/Specific/Service/vending_machine_restock.rsi
     state: base
   product: CrateVendingMachineRestockGamesFilled
-  cost: 1250 # Pirate
+  cost: 1900 # Pirate: space blade boxes raise the restock value.
   category: cargoproduct-category-name-service
   group: market
 
@@ -103,7 +103,7 @@
     sprite: Objects/Specific/Service/vending_machine_restock.rsi
     state: base
   product: CrateVendingMachineRestockMedicalFilled
-  cost: 3200 # Goobstation - added gauze, patches and cigs to vends so the restock crate price increased. Pirate: IV blood packs.
+  cost: 4000 # Goobstation - stocked medical vendors. Pirate: IV blood packs and medical vendor variants.
   category: cargoproduct-category-name-medical
   group: market
 
@@ -163,7 +163,7 @@
     sprite: Objects/Specific/Service/vending_machine_restock.rsi
     state: base
   product: CrateVendingMachineRestockSecTechFilled
-  cost: 2200
+  cost: 2500 # Pirate: SecTech utility stock must not create cargo arbitrage.
   category: cargoproduct-category-name-security
   group: market
 

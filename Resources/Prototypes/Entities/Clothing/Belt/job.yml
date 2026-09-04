@@ -33,6 +33,7 @@
       - Hammer # Goobstation
       - Nailgun # Goobstation
       - MagazineNailgun # Goobstation
+      - HereticBladeLock # Pirate: Lock path key blade.
       - MesonGoggles # Goobstation
       components:
       - StationMap
@@ -212,6 +213,7 @@
       - MedicalPatch # Goobstation
       - AutoinjectorCartridge # Goobstation
       - HandheldCrewMonitor # Goobstation
+      - BrigmedicBeltEquip # Pirate: allow BrigBuddy 5000 in medic belts
       - Hypospray
       components:
       - Injector
@@ -439,6 +441,10 @@
       - MilitaryPowerCell # Goobstation
       - EnergyMagAmmo # Goobstation
       - HandGrenade
+      - MilitaryPowerCellSMG # Goob edit start
+      - MilitaryPowerCellSniper
+      - MilitaryPowerCellRevolver
+      - EnergyMagAmmo # Goob edit end
       components:
       - Stunbaton
       - FlashOnTrigger

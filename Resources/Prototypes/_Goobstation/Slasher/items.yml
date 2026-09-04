@@ -56,9 +56,7 @@
     sprite: _Goobstation/Objects/Specific/Slasher/mask.rsi
   - type: Clothing
     sprite: _Goobstation/Objects/Specific/Slasher/mask.rsi
-    clothingVisuals:
-      head:
-      - state: equipped-HELMET
+    # Pirate: welding visor toggle - use the default raised-visor sprite states.
   - type: Tag
     tags:
     - WhitelistChameleon
@@ -216,14 +214,12 @@
     clothingVisuals:
       head:
       - state: equipped-HELMET
-        offset: "-0.06, 0.40"
   - type: Appearance
   - type: SpringlockClothing
     lockedClothingVisuals:
       head:
       - sprite: _Goobstation/Objects/Specific/Slasher/spring_mask.rsi
         state: locked-equipped-HELMET
-        offset: "-0.03, 0.32"
 
 - type: entity
   name: spring suit

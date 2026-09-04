@@ -2,6 +2,7 @@
 
 using Content.Shared.Inventory;
 using Robust.Shared.GameStates;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Serialization;
 using Robust.Shared.Utility;
 
@@ -12,13 +13,14 @@ using Content.Shared._Shitmed.Medical.Surgery.Traumas.Systems;
 using Content.Shared.Body.Part;
 using Content.Shared.Damage;
 using Content.Goobstation.Maths.FixedPoint;
+using Content.Shared._Pirate.Knowledge.Quality; // Pirate
 
 namespace Content.Shared.Armor;
 
 /// <summary>
 /// Used for clothing that reduces damage when worn.
 /// </summary>
-[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, Access(typeof(SharedArmorSystem), typeof(TraumaSystem))] // Shitmed Change
+[RegisterComponent, NetworkedComponent, AutoGenerateComponentState, Access(typeof(SharedArmorSystem), typeof(TraumaSystem), typeof(QualitySystem))] // Shitmed Change; Pirate quality
 public sealed partial class ArmorComponent : Component
 {
     /// <summary>
@@ -62,14 +64,13 @@ public sealed partial class ArmorComponent : Component
     /// Shitmed Change: The amount of dismemberment chance deduction.
     /// </summary>
     [DataField, Access(Other = AccessPermissions.ReadExecute)] // Goob edit
-    public Dictionary<TraumaType, FixedPoint2> TraumaDeductions = new()
+    public Dictionary<ProtoId<TraumaTypePrototype>, FixedPoint2> TraumaDeductions = new()
     {
-        { TraumaType.Dismemberment, 0 },
-        { TraumaType.BoneDamage, 0 },
-        { TraumaType.OrganDamage, 0 },
-        { TraumaType.VeinsDamage, 0 },
-        { TraumaType.NerveDamage, 0 },
-        { TraumaType.FaceMutilation, 0 }, // DOWNSTREAM-TPirates: face mutilation
+        { "Dismemberment", 0 },
+        { "BoneDamage", 0 },
+        { "OrganDamage", 0 },
+        { "VeinsDamage", 0 },
+        { "NerveDamage", 0 },
     };
 }
 

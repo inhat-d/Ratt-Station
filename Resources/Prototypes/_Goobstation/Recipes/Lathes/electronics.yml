@@ -10,10 +10,10 @@
   id: ClarkePeripheralsElectronics
   result: ClarkePeripheralsElectronics
 
-#- type: latheRecipe
-#  parent: BaseGoldCircuitboardRecipe
-#  id: GygaxCentralElectronics
-#  result: GygaxCentralElectronics
+- type: latheRecipe
+  parent: BaseGoldCircuitboardRecipe
+  id: GygaxCentralElectronics
+  result: GygaxCentralElectronics
 
 - type: latheRecipe
   parent: BaseGoldCircuitboardRecipe
@@ -25,10 +25,10 @@
   id: GygaxTargetingElectronics
   result: GygaxTargetingElectronics
 
-#- type: latheRecipe
-#  parent: BaseSilverCircuitboardRecipe
-#  id: DurandCentralElectronics
-#  result: DurandCentralElectronics
+- type: latheRecipe
+  parent: BaseSilverCircuitboardRecipe
+  id: DurandCentralElectronics
+  result: DurandCentralElectronics
 
 - type: latheRecipe
   parent: BaseSilverCircuitboardRecipe
@@ -106,6 +106,12 @@
   icon: _Goobstation/Structures/Machines/Icons/Computers/xenobiology.png
   id: XenobiologyBountyComputerCircuitboard
   result: XenobiologyBountyComputerCircuitboard
+
+- type: latheRecipe
+  parent: BaseCircuitboardRecipe
+  icon: _Goobstation/Structures/Machines/Icons/Computers/xenobiology.png
+  id: ResearchComputerCircuitboard
+  result: ResearchComputerCircuitboard
 
 - type: latheRecipe
   parent: BaseGoldCircuitboardRecipe

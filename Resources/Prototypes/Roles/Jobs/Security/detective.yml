@@ -23,12 +23,13 @@
   # Pirate contractor start
   - !type:CharacterEmployerRequirement
     employers:
-    - NanoTrasen
+    - IdrisIncorporated
     - ZavodskiyInterstellar
     - PMCG
   # Pirate contractor end
   startingGear: DetectiveGear
   icon: "JobIconDetective"
+  ransomModifier: 2 # Pirate: security staff are worth less than heads
   supervisors: job-supervisors-hos
   canBeAntag: false
   guides: # goobstation
@@ -61,6 +62,7 @@
   storage:
     back:
     - Flash
+    - BaseSeclinkRadio # Pirate: SecLink for security staff
     - ForensicPad
     - ForensicScanner
     - ClothingMaskGasSecurity # Goobstation

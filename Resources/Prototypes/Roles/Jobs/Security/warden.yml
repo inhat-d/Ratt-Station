@@ -33,13 +33,14 @@
     # Pirate contractor start
     - !type:CharacterEmployerRequirement
       employers:
-      - NanoTrasen
+      - IdrisIncorporated
       - ZavodskiyInterstellar
       - PMCG
     # Pirate contractor end
   weight: 5
   startingGear: WardenGear
   icon: "JobIconWarden"
+  ransomModifier: 2.5 # Pirate: traitor ransom value
   supervisors: job-supervisors-hos
   canBeAntag: false
   guides: # goobstation
@@ -76,6 +77,7 @@
   storage:
     back:
     - Flash
+    - BaseSeclinkRadio # Pirate: SecLink for security staff
 #    - MagazinePistol # PIRATE, moved to loadouts
 
 - type: chameleonOutfit

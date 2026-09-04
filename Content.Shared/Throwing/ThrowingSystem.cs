@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 using System.Numerics;
+using Content.Shared._Pirate.Knowledge;
 using Content.Shared.Administration.Logs;
 using Content.Shared.Camera;
 using Content.Shared.CCVar;
@@ -152,7 +153,7 @@ public sealed class ThrowingSystem : EntitySystem
         bool throwInAir = true // WWDP throwInAir
             )
     {
-        if (baseThrowSpeed <= 0 || direction == Vector2Helpers.Infinity || direction == Vector2Helpers.NaN || direction == Vector2.Zero || friction < 0)
+        if (!float.IsFinite(baseThrowSpeed) || baseThrowSpeed <= 0 || !float.IsFinite(direction.X) || !float.IsFinite(direction.Y) || direction == Vector2.Zero || friction < 0) // Goob
             return;
 
         // Unanchor the entity if applicable
@@ -181,6 +182,14 @@ public sealed class ThrowingSystem : EntitySystem
 
         if (tileFriction == 0f)
             compensateFriction = false; // cannot calculate this if there is no friction
+
+        // Pirate: query only the thrower's skill for this throw.
+        if (user is { } thrower)
+        {
+            var skillEvent = new ModifyThrownSpeedEvent(thrower, baseThrowSpeed, direction.Length());
+            RaiseLocalEvent(thrower, ref skillEvent);
+            baseThrowSpeed = Math.Max(skillEvent.BaseThrowSpeed, float.Epsilon);
+        }
 
         // Set the time the item is supposed to be in the air so we can apply OnGround status.
         // This is a free parameter, but we should set it to something reasonable.

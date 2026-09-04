@@ -30,7 +30,7 @@ AirlockReporterGlassLocked: AirlockServiceGlassLocked
 AirlockZookeeperGlassLocked: AirlockServiceGlassLocked
 AirlockZookeeperLocked: AirlockServiceLocked
 AlwaysPoweredLightPostSmallRed: null
-AsteroidAltRock: AsteroidRock
+# AsteroidAltRock: AsteroidRock # Pirate: local prototype restored.
 BenchParkBambooMiddle: null
 BenchParkLeft: null
 BenchParkMiddle: null
@@ -376,10 +376,10 @@ DefaultStationBeaconTeslaEngine: null
 FoodBoxDonkpocketGondola: FoodBoxDonkpocketPizza
 
 # 2024-01-31
-SpyCrewMonitor: null
-SpyCrewMonitorEmpty: null
-SyndiCrewMonitor: null
-SyndiCrewMonitorEmpty: null
+# SpyCrewMonitor: null Trauma - Re-add Antag Crew Monitors
+# SpyCrewMonitorEmpty: null Trauma - Re-add Antag Crew Monitors
+# SyndiCrewMonitor: null Trauma - Re-add Antag Crew Monitors
+# SyndiCrewMonitorEmpty: null Trauma - Re-add Antag Crew Monitors
 
 #SpawnVehicleWheelchair: null Goobstation - Re-add vehicles
 #SpawnVehicleWheelchairFolded: null Goobstation - Re-add vehicles
@@ -427,7 +427,7 @@ FoodDonutJellyBlumpkin: FoodDonutJellyBluePumpkin
 SolarAssemblyPart: SolarAssemblyFlatpack
 AmePart: AmePartFlatpack
 AmePartStealObjective: AmePartFlatpackStealObjective
-Observationskit: null
+# Observationskit: null Trauma - Re-add Antag Crew Monitors
 
 # 2024-02-26
 CrateBaseWeldable: CrateGenericSteel
@@ -1025,4 +1025,29 @@ PosterContrabandCommunistState: PosterContrabandSolAlliance
 MagazinePistolMindbreaker: MagazinePistolCryptobiolin
 SpawnMobGoidaBot: SpawnMobPotyzhnobot
 PinkHandcuffs: null
+AsimovCircuitBoard: CrewsimovCircuitBoard
+# random medical vendor variations.
+VendingMachineMedical: RandomVendingMedical
+VendingMachineMedicalBase: RandomVendingMedicalCivilian
+VendingMachineWallMedical: RandomVendingMedicalWall
+VendingMachineWallMedicalCivilian: RandomVendingMedicalCivilianWall
+Bush: FloraBigBush01
+# stairs
+Stairs: SteelCenterStairs
+StairStage: SteelCenterStairs
+StairWhite: SteelWhiteCenterStairs
+StairStageWhite: SteelWhiteCenterStairs
+StairDark: SteelDarkCenterStairs
+StairStageDark: SteelDarkCenterStairs
+StairWood: WoodCenterStairs
+StairStageWood: WoodCenterStairs
+# sofas
+BenchSofaCorpMiddle: SofaBlack
+BenchSofaCorpLeft: SofaBlackRight
+BenchSofaCorpRight: SofaBlackLeft
+BenchSofaCorpCorner: SofaBlackCorner
+BenchSofaMiddle: SofaWhite
+BenchSofaLeft: SofaWhiteRight
+BenchSofaRight: SofaWhiteLeft
+BenchSofaCorner: SofaWhiteCorner
 # PIRATE END

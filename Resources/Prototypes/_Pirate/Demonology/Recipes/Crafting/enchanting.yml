@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+# Pirate: construction prototypes have no inheritance or MagicalLiteracy quality gate here.
+
+- type: construction
+  id: EnchantScroll
+  graph: EnchantedScroll
+  targetNode: finish
+  category: construction-category-demonology
+  objectType: Item
+  # Pirate: effective Trauma skill requirements and quality.
+  theory:
+    MagicalLiteracyKnowledge: 1
+  useQuality: false
+
+- type: construction
+  id: BloodVial
+  graph: DemonBlood
+  targetNode: finish
+  category: construction-category-demonology
+  objectType: Item
+  # Pirate: effective Trauma skill requirements and quality.
+  theory:
+    MagicalLiteracyKnowledge: 1
+  useQuality: false
+
+- type: construction
+  id: CraftInk
+  graph: RandomInk
+  targetNode: finish
+  category: construction-category-demonology
+  objectType: Item
+  # Pirate: effective Trauma skill requirements and quality.
+  theory:
+    MagicalLiteracyKnowledge: 1
+  useQuality: false
+
+- type: construction
+  id: DefaceBible
+  graph: DefaceBible
+  targetNode: finish
+  category: construction-category-demonology
+  objectType: Item
+  # Pirate: effective Trauma skill requirements and quality.
+  theory:
+    MagicalLiteracyKnowledge: 1
+  useQuality: false

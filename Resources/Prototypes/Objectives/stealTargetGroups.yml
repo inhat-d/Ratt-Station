@@ -85,12 +85,16 @@
     sprite: Objects/Misc/nukedisk.rsi
     state: icon
 
-- type: stealTargetGroup
-  id: WeaponEnergyMagnum
-  name: steal-target-groups-weapon-energy-magnum
-  sprite:
-    sprite: Objects/Weapons/Guns/Battery/energy_magnum.rsi
-    state: icon
+# Goob Start - Removing Energy Magnum
+
+# - type: stealTargetGroup
+#   id: WeaponEnergyMagnum
+#   name: steal-target-groups-weapon-energy-magnum
+#   sprite:
+#     sprite: Objects/Weapons/Guns/Battery/energy_magnum.rsi
+#     state: icon
+
+# # Goob End - Removing Energy Magnum
 
 # Thief Collection
 
@@ -423,11 +427,11 @@
     state: fox
 
 - type: stealTargetGroup
-  id: AnimalShiva
-  name: steal-target-groups-animal-shiva
+  id: AnimalSecurity # Pirate: security pets share one theft target group.
+  name: steal-target-groups-animal-security
   sprite:
-    sprite: Mobs/Pets/shiva.rsi
-    state: shiva
+    sprite: _Pirate/Mobs/Pets/secdog.rsi
+    state: base
 
 - type: stealTargetGroup
   id: AnimalTropico

@@ -9,6 +9,7 @@
   markingLimits: MobIPCMarkingLimits
   dollPrototype: MobIPCDummy
   skinColoration: Hues
+  knowledge: IPC # Pirate
   minAge: 1
   maxAge: 240
   oldAge: 50
@@ -35,6 +36,9 @@
     HeadSide: MobHumanoidAnyMarking
     Tail: MobHumanoidAnyMarking
     Hair: MobHumanoidMarkingMatchSkin
+    # Pirate: enable underwear customization.
+    UndergarmentTop: MobHumanoidAnyMarking
+    UndergarmentBottom: MobHumanoidAnyMarking
     Chest: MobIPCChest
     Groin: MobIPCGroin
     LArm: MobIPCLArm
@@ -50,6 +54,10 @@
 - type: markingPoints
   id: MobIPCMarkingLimits
   points:
+    # Pirate - Trauma Station hair gradients
+    HairSpecial:
+      points: 1
+      required: false
     Head:
       points: 1
       required: true
@@ -64,6 +72,13 @@
       points: 1
       required: true
       defaultMarkings: [ MobIPCChestDefault ]
+    # Pirate: enable underwear customization.
+    UndergarmentTop:
+      points: 1
+      required: false
+    UndergarmentBottom:
+      points: 1
+      required: false
     HeadSide:
       points: 1
       required: false

@@ -10,6 +10,7 @@ using Content.Shared._Shitmed.Medical.Surgery;
 using Content.Shared._Shitmed.Medical.Surgery.Conditions;
 using Content.Shared._Shitmed.Medical.Surgery.Steps;
 using Content.Shared._Shitmed.Medical.Surgery.Traumas;
+using Content.Shared._Shitmed.Medical.Surgery.Traumas.Systems;
 using Content.Shared._Shitmed.Medical.Surgery.Wounds;
 using Content.Shared._Shitmed.Medical.Surgery.Wounds.Components;
 using Content.Shared._Shitmed.Medical.Surgery.Wounds.Systems;
@@ -63,7 +64,7 @@ public sealed class LimbFixationTest
             var beforeTrauma = new BeforeTraumaInducedEvent(
                 FixedPoint2.New(50),
                 armWoundable.ParentWoundable!.Value,
-                TraumaType.Dismemberment);
+                TraumaSystem.Dismemberment);
 
             entMan.EventBus.RaiseLocalEvent(arm.Id, ref beforeTrauma);
 
@@ -131,74 +132,6 @@ public sealed class LimbFixationTest
             entMan.EventBus.RaiseLocalEvent(arm.Id, ref integrityChanged);
 
             Assert.That(entMan.HasComponent<LimbFixationDamageComponent>(arm.Id), Is.True);
-        });
-
-        await pair.CleanReturnAsync();
-    }
-
-    [Test]
-    public async Task RestoreFunctionLeavesPartCriticallyDamaged()
-    {
-        await using var pair = await PoolManager.GetServerClient(new PoolSettings
-        {
-            Connected = false,
-            InLobby = false,
-        });
-
-        var server = pair.Server;
-        var entMan = server.EntMan;
-        var body = entMan.System<BodySystem>();
-        var surgery = entMan.System<SurgerySystem>();
-        var wounds = entMan.System<WoundSystem>();
-
-        await server.WaitAssertion(() =>
-        {
-            var human = entMan.Spawn("MobHuman");
-            entMan.EnsureComponent<LimbFixationComponent>(human);
-
-            var leg = body.GetBodyChildrenOfType(
-                    human,
-                    BodyPartType.Leg,
-                    symmetry: BodyPartSymmetry.Left)
-                .Single();
-            var woundable = entMan.GetComponent<WoundableComponent>(leg.Id);
-
-            Assert.That(
-                wounds.TryInduceWound(leg.Id, "Blunt", woundable.IntegrityCap, out _, woundable),
-                Is.True);
-            Assert.Multiple(() =>
-            {
-                Assert.That(woundable.WoundableIntegrity, Is.EqualTo(FixedPoint2.Zero));
-                Assert.That(entMan.HasComponent<LimbFixationDamageComponent>(leg.Id), Is.True);
-                Assert.That(
-                    entMan.GetComponent<TargetingComponent>(human).BodyStatus[TargetBodyPart.LeftLeg],
-                    Is.EqualTo(WoundableSeverity.Disabled));
-            });
-
-            var restoreStep = surgery.GetSingleton("SurgeryStepRestoreLimbFunction");
-            Assert.That(restoreStep, Is.Not.Null);
-
-            var restore = new SurgeryStepEvent(
-                human,
-                human,
-                leg.Id,
-                human,
-                EntityUid.Invalid,
-                restoreStep!.Value,
-                false);
-            entMan.EventBus.RaiseLocalEvent(restoreStep.Value, ref restore);
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(entMan.HasComponent<LimbFixationDamageComponent>(leg.Id), Is.False);
-                Assert.That(
-                    woundable.WoundableIntegrity,
-                    Is.EqualTo(woundable.Thresholds[WoundableSeverity.Critical]));
-                Assert.That(woundable.WoundableSeverity, Is.EqualTo(WoundableSeverity.Critical));
-                Assert.That(
-                    entMan.GetComponent<TargetingComponent>(human).BodyStatus[TargetBodyPart.LeftLeg],
-                    Is.Not.EqualTo(WoundableSeverity.Disabled));
-            });
         });
 
         await pair.CleanReturnAsync();

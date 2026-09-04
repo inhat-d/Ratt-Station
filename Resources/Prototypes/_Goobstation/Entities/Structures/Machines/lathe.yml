@@ -2,7 +2,7 @@
 
 - type: entity
   id: EngineeringTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: engineering techfab
   description: Prints equipment and circuitboards for use by engineering department.
   components:
@@ -82,7 +82,7 @@
 
 - type: entity
   id: CargoTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: cargo techfab
   description: Prints equipment and circuitboards for use by cargo department.
   components:
@@ -108,6 +108,7 @@
     - ToolsStatic
     #- SharedBoardsStatic Pirate removed
     - CargoBoardsStatic
+    - CargoBoardsStaticGoob
     - CablesStatic
     - PartsStatic
     - LatheMiscStatic
@@ -118,6 +119,7 @@
     dynamicPacks:
     - AdvancedTools
     - Mining
+    - MiningLavaland # Lavaland Change
     - PowerCells
     - Equipment
     # - ServiceWeapons
@@ -149,7 +151,7 @@
 
 - type: entity
   id: ScienceTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: science techfab
   description: Prints equipment and circuitboards for use by science department.
   components:
@@ -240,7 +242,7 @@
 
 - type: entity
   id: ServiceTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: service techfab
   description: Prints equipment and circuitboards for use by service department.
   components:
@@ -304,7 +306,7 @@
 
 - type: entity
   id: ERTTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: ERT techfab
   description: Standard-issue ammunition and gear for Emergency Response Team deployments. Fast, basic, reliable.
   components:

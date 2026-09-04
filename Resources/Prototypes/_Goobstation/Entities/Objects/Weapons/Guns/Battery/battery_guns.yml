@@ -150,7 +150,7 @@
   - type: MaterialEnergy
     materialWhiteList: [Plasma]
   - type: BatteryAmmoProvider
-    proto: BulletPlasmaCutterStrong
+    proto: BulletPlasmaRifle
     fireCost: 100
   - type: WeaponRandomExplode
     explosionChance: 0.05 # 1d20 roll
@@ -261,7 +261,7 @@
     slots:
       flashlight:
         name: weapon-upgrade-slot-name-flashlight
-        priority: 5
+        priority: 0 # DOWNSTREAM-TPirates: gun flashlights - lowest eject priority
         ejectOnBreak: true
         occludesLight: false
         whitelist:

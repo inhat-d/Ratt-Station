@@ -3,9 +3,11 @@ using Content.Shared.Actions;
 using Content.Shared.Clothing;
 using Content.Shared.Clothing.Components;
 using Content.Shared.Inventory;
+using Content.Shared.Interaction.Components;
 using Content.Shared.Inventory.Events;
 using Content.Shared.Item.ItemToggle;
 using Content.Shared.Movement.Systems;
+using Content.Shared.Mobs;
 using Content.Shared.Popups;
 using Robust.Shared.Audio.Systems;
 using Robust.Shared.Containers;
@@ -24,6 +26,7 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
     [Dependency] private SharedActionsSystem _actions = default!;
     [Dependency] private SharedAudioSystem _audioSystem = default!;
     [Dependency] private SlotBlockSystem _slotBlock = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
     [Dependency] private MovementSpeedModifierSystem _speed = default!;
 
     [Dependency] private SharedUserInterfaceSystem _uiSystem = default!;
@@ -38,10 +41,12 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
         SubscribeLocalEvent<ModularSuitComponent, MapInitEvent>(OnMapInit);
         SubscribeLocalEvent<ModularSuitComponent, GetItemActionsEvent>(OnGetItemActions);
         SubscribeLocalEvent<ModularSuitComponent, ToggleDeploySuitActionEvent>(OnToggleDeploy);
+        SubscribeLocalEvent<ModularSuitComponent, ToggleActivateSuitActionEvent>(OnToggleActivateAction);
         SubscribeLocalEvent<ModularSuitComponent, ToggleSuitUiActionEvent>(OnToggleUi);
 
         SubscribeLocalEvent<ModularSuitComponent, ClothingGotEquippedEvent>(OnEquipped);
         SubscribeLocalEvent<ModularSuitComponent, GotUnequippedEvent>(OnUnequipped);
+        SubscribeLocalEvent<ModularSuitCarrierComponent, MobStateChangedEvent>(OnWearerMobStateChanged);
 
         SubscribeLocalEvent<ModularSuitPartComponent, BeingEquippedAttemptEvent>(OnPartEquippedAttempt);
         SubscribeLocalEvent<ModularSuitPartComponent, GotUnequippedEvent>(OnPartUnequipped);
@@ -52,7 +57,10 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
     private void OnMapInit(Entity<ModularSuitComponent> ent, ref MapInitEvent args)
     {
         _actionContainer.EnsureAction(ent, ref ent.Comp.ToggleDeployActionEntity, ent.Comp.ToggleDeployAction);
+        _actionContainer.EnsureAction(ent, ref ent.Comp.ToggleActivateActionEntity, ent.Comp.ToggleActivateAction);
         _actionContainer.EnsureAction(ent, ref ent.Comp.ToggleUiActionEntity, ent.Comp.ToggleUiAction);
+        SyncDeployAction(ent);
+        SyncActivateAction(ent);
 
         ent.Comp.NextUpdate = GameTiming.CurTime + ent.Comp.UpdateInterval;
     }
@@ -63,6 +71,7 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
             return;
 
         args.AddAction(ref ent.Comp.ToggleDeployActionEntity, ent.Comp.ToggleDeployAction);
+        args.AddAction(ref ent.Comp.ToggleActivateActionEntity, ent.Comp.ToggleActivateAction);
         args.AddAction(ref ent.Comp.ToggleUiActionEntity, ent.Comp.ToggleUiAction);
     }
 
@@ -74,25 +83,99 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
         if (ent.Comp.Wearer == null)
             return;
 
-        if (args.Action.Comp.Toggled)
-        {
-            _actions.SetToggled(args.Action.Owner, false);
+        args.Handled = true;
+        ToggleDeploy(ent, ent.Comp.Wearer.Value);
+    }
 
-            if (ent.Comp.Deployed)
-            {
-                UndeploySuit(ent, ent.Comp.Wearer.Value);
-            }
-            else
-            {
-                DeploySuit(ent, ent.Comp.Wearer.Value);
-            }
-        }
-        else
+    protected void ToggleDeploy(Entity<ModularSuitComponent> ent, EntityUid wearer, EntityUid? actor = null)
+    {
+        if (!ent.Comp.Deployed)
         {
-            _actions.SetToggled(args.Action.Owner, true);
+            DeploySuit(ent, wearer);
+            return;
         }
+
+        if (ent.Comp.Active)
+        {
+            Refuse(ent, actor ?? wearer, "modsuit-retract-blocked-active");
+            return;
+        }
+
+        UndeploySuit(ent, wearer);
+    }
+
+    protected void Refuse(Entity<ModularSuitComponent> ent, EntityUid recipient, LocId reason)
+    {
+        Popup.PopupEntity(Loc.GetString(reason), ent.Owner, recipient, PopupType.SmallCaution);
+        _audioSystem.PlayEntity(ent.Comp.BuzzSound, recipient, recipient);
+    }
+
+    private void OnToggleActivateAction(Entity<ModularSuitComponent> ent, ref ToggleActivateSuitActionEvent args)
+    {
+        if (args.Handled)
+            return;
+
+        if (ent.Comp.Wearer == null)
+            return;
 
         args.Handled = true;
+
+        if (!args.Action.Comp.Toggled)
+        {
+            _actions.SetToggled(args.Action.Owner, true);
+            return;
+        }
+
+        _actions.SetToggled(args.Action.Owner, false);
+        ToggleActive(ent, ent.Comp.Wearer.Value);
+    }
+
+    protected virtual void ToggleActive(Entity<ModularSuitComponent> ent, EntityUid user)
+    {
+    }
+
+    private void SetSealedToWearer(Entity<ModularSuitComponent> ent, bool sealed_)
+    {
+        if (!sealed_)
+        {
+            if (ent.Comp.AddedUnremoveable)
+            {
+                RemComp<UnremoveableComponent>(ent.Owner);
+                ent.Comp.AddedUnremoveable = false;
+            }
+
+            return;
+        }
+
+        if (HasComp<UnremoveableComponent>(ent.Owner))
+            return;
+
+        EnsureComp<UnremoveableComponent>(ent.Owner).DeleteOnDrop = false;
+        ent.Comp.AddedUnremoveable = true;
+    }
+
+    private void SyncDeployAction(Entity<ModularSuitComponent> ent)
+    {
+        if (ent.Comp.ToggleDeployActionEntity is not { } action)
+            return;
+
+        _actions.SetToggled(action, ent.Comp.Deployed);
+
+        var key = ent.Comp.Deployed ? "retract" : "deploy";
+        _metaData.SetEntityName(action, Loc.GetString($"modsuit-action-{key}-name"));
+        _metaData.SetEntityDescription(action, Loc.GetString($"modsuit-action-{key}-desc"));
+    }
+
+    private void SyncActivateAction(Entity<ModularSuitComponent> ent)
+    {
+        if (ent.Comp.ToggleActivateActionEntity is not { } action)
+            return;
+
+        _actions.SetToggled(action, false);
+
+        var key = ent.Comp.Active ? "deactivate" : "activate";
+        _metaData.SetEntityName(action, Loc.GetString($"modsuit-action-{key}-name"));
+        _metaData.SetEntityDescription(action, Loc.GetString($"modsuit-action-{key}-desc"));
     }
 
     private void OnToggleUi(Entity<ModularSuitComponent> ent, ref ToggleSuitUiActionEvent args)
@@ -143,6 +226,19 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
         _uiSystem.CloseUi(ent.Owner, ModularSuitUiKey.Key, args.Equipee);
     }
 
+    private void OnWearerMobStateChanged(Entity<ModularSuitCarrierComponent> ent, ref MobStateChangedEvent args)
+    {
+        if (args.NewMobState != MobState.Dead ||
+            ent.Comp.CurrentSlot is not { } slot ||
+            !Inventory.TryGetSlotEntity(ent.Owner, slot, out var suitUid) ||
+            !TryComp<ModularSuitComponent>(suitUid.Value, out var suit))
+        {
+            return;
+        }
+
+        SetActive((suitUid.Value, suit), false);
+    }
+
     private void DeploySuit(Entity<ModularSuitComponent> ent, EntityUid wearer)
     {
         if (ent.Comp.Deployed)
@@ -159,8 +255,9 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
         _slotBlock.SetEnabled(ent.Owner, true);
         EquipAllParts(ent, wearer);
         ent.Comp.Deployed = true;
+        SyncDeployAction(ent);
 
-        _audioSystem.PlayEntity(ent.Comp.DeploySound, wearer, wearer);
+        _audioSystem.PlayPvs(ent.Comp.DeploySound, ent.Owner);
         Dirty(ent.Owner, ent.Comp);
         UpdateActions(ent);
     }
@@ -180,6 +277,7 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
         {
             _slotBlock.SetEnabled(ent.Owner, false);
             ent.Comp.Deployed = false;
+            SyncDeployAction(ent);
             ent.Comp.Assembled = false;
 
             Dirty(ent.Owner, ent.Comp);
@@ -193,8 +291,9 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
         UnequipAllParts(ent, wearer);
         ent.Comp.Deployed = false;
         ent.Comp.Assembled = false;
+        SyncDeployAction(ent);
 
-        _audioSystem.PlayEntity(ent.Comp.DeploySound, wearer, wearer);
+        _audioSystem.PlayPvs(ent.Comp.DeploySound, ent.Owner);
         Dirty(ent.Owner, ent.Comp);
         UpdateActions(ent);
     }
@@ -362,7 +461,21 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
             if (ev.Actions.Count == 0)
                 return;
 
-            _actions.GrantActions(suitComp.Wearer.Value, ev.Actions, suit);
+            var granted = new HashSet<EntityUid>();
+            foreach (var action in _actions.GetActions(suitComp.Wearer.Value))
+                granted.Add(action.Owner);
+
+            var missing = new List<EntityUid>();
+            foreach (var action in ev.Actions)
+            {
+                if (!granted.Contains(action))
+                    missing.Add(action);
+            }
+
+            if (missing.Count == 0)
+                return;
+
+            _actions.GrantActions(suitComp.Wearer.Value, missing, suit);
         }
     }
 
@@ -404,6 +517,8 @@ public abstract partial class SharedModularSuitSystem : EntitySystem
             return;
 
         ent.Comp.Active = active;
+        SetSealedToWearer(ent, active);
+        SyncActivateAction(ent);
         Dirty(ent.Owner, ent.Comp);
     }
 }

@@ -22,7 +22,7 @@
   - type: EmitSoundOnTrigger
     sound:
       collection: FelinidMeows
-  
+
 - type: entity
   parent: BasePlushie
   id: PlushieIpcCat # :3
@@ -153,7 +153,7 @@
   - type: EmitSoundOnTrigger
     sound:
       path: /Audio/Voice/Human/female_sigh.ogg
-      
+
 - type: entity
   parent: BasePlushie
   id: PlushieSkeleton
@@ -208,7 +208,7 @@
     sprite: _Pirate/Objects/Fun/Plushies/susie.rsi
     slots:
     - HEAD
-    
+
 - type: entity
   parent: BasePlushie
   id: PlushieTayler
@@ -261,5 +261,73 @@
   - type: Clothing
     quickEquip: false
     sprite: _Pirate/Objects/Fun/Plushies/pocket_assistant.rsi
+    slots:
+    - HEAD
+
+- type: entity
+  parent: BasePlushie
+  id: PlushieNilaMil
+  name: "плюшева слаймолюдка-ботанік"
+  description: Смішна іграшка вашої слизової знайомої! На етикетці написано "Міла Ніл.  So evil...""
+  components:
+  - type: Sprite
+    sprite: _Pirate/Objects/Fun/Plushies/toys.rsi
+    state: plushie_Nila_Mil
+  - type: EmitSoundOnUse
+    sound:
+      collection: Bubbles
+  - type: EmitSoundOnActivate
+    sound:
+      collection: Bubbles
+  - type: EmitSoundOnCollide
+    sound:
+      collection: Pops
+  - type: EmitSoundOnLand
+    sound:
+      collection: Pops
+  - type: EmitSoundOnTrigger
+    sound:
+      collection: Pops
+
+- type: entity
+  parent: BasePlushie
+  id: PlushiePocketRickTvarPoviya
+  name: "плюшевий Шахтар"
+  description: "Плюшева версія найкрасивішого та наймилішого шахтаря Нанотрейзен за оцінками чоловічого конкурсу краси"
+  components:
+  - type: Sprite
+    sprite: _Pirate/Objects/Fun/Plushies/tvar-poviya.rsi
+    state: icon
+  - type: EmitSoundOnUse
+    sound:
+      collection: RickKarter
+  - type: EmitSoundOnActivate
+    sound:
+      collection: RickKarter
+
+- type: entity
+  parent: BasePlushie
+  id: PlushieBlakinka
+  name: "плюшева блакитна тіньовичка"
+  description: Плюшева іграшка домашнього тіньовика, морда іграшки виглядає ліниво на стільки, на скільки це можливо. Змусьте цю іграшку працювати замість вас! # Коли весілля з Малваром?
+  components:
+  - type: Sprite
+    sprite: _Pirate/Objects/Fun/Plushies/blakinka.rsi
+    state: icon
+  - type: EmitSoundOnUse
+    sound:
+      collection: Mars
+  - type: EmitSoundOnActivate
+    sound:
+      collection: Mars
+  - type: EmitSoundOnCollide
+    sound:
+      collection: Wurble
+  - type: EmitSoundOnLand
+    sound:
+      collection: Wurble
+  - type: Clothing
+    quickEquip: false
+    sprite: _Pirate/Objects/Fun/Plushies/blakinka.rsi
     slots:
     - HEAD

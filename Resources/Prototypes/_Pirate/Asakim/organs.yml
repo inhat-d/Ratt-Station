@@ -1,0 +1,21 @@
+# SPDX-FileCopyrightText: 2026 Space Station 14 Contributors
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+- type: entity
+  parent: OrganHumanEyes
+  id: OrganAsakimEyes
+  name: asakim eyes
+  components:
+  - type: Organ
+    onAdd:
+    - type: MonolithNightVision # Gen 3 wide-quadtube
+      relayOverlay: false
+      goggleEffect: true
+      viewCircleRadius: 450
+      viewCircleCount: 4
+      viewCircleSpacing: 280
+      action: MonolithToggleNightVision
+      phosphorColor: "#00FF00"
+      lightingColor: "#FFFFFF26"
+      amplification: 14

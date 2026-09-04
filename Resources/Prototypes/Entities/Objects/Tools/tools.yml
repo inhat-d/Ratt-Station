@@ -423,9 +423,12 @@
   - type: ActivatableUI
     inHandsOnly: true
     key: enum.RcdUiKey.Key
+  - type: StealTarget # Pirate
+    stealGroup: RCD
   - type: Tag
     tags:
     - DroneUsable # Goobstation
+    - RCD # Pirate: Trauma revolutionary printer construction.
 
 - type: entity
   id: RPD
@@ -466,6 +469,9 @@
     maxCharges: 90
   - type: Sprite
     sprite: Objects/Tools/rpd.rsi
+  - type: Tag # Pirate: RPD must not satisfy the Trauma RCD construction step.
+    tags:
+    - DroneUsable
 
 
 - type: entity
@@ -515,8 +521,8 @@
     materialComposition:
       Steel: 100
       Plastic: 100
-  - type: StaticPrice
-    price: 60
+  - type: StaticPrice # Pirate: engivend price pass
+    price: 150
 
 - type: entity
   name: omnitool

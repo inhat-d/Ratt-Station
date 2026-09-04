@@ -1,3 +1,4 @@
+using Content.Goobstation.Common.Kitchen;
 using Content.Shared.DoAfter;
 using Content.Shared.Hands.Components;
 using Content.Shared.Materials;
@@ -13,6 +14,43 @@ public sealed partial class ItemSlotsSystem
     {
         SubscribeLocalEvent<ItemSlotsComponent, GotReclaimedEvent>(OnReclaimed);
         SubscribeLocalEvent<ItemSlotsComponent, ItemSlotInteractionDoAfterEvent>(HandleDoAfter);
+        SubscribeLocalEvent<ItemSlotsComponent, BeforeBeingButcheredEvent>(OnBeforeBeingButchered);
+    }
+
+    private void OnReclaimed(EntityUid uid, ItemSlotsComponent component, GotReclaimedEvent args)
+    {
+        foreach (var slot in component.Slots.Values)
+        {
+            if (slot.ContainerSlot != null)
+                _containers.EmptyContainer(slot.ContainerSlot, destination: args.ReclaimerCoordinates);
+        }
+    }
+
+    private void HandleDoAfter(EntityUid uid, ItemSlotsComponent component, ItemSlotInteractionDoAfterEvent args)
+    {
+        if (args.Handled
+            || args.Cancelled
+            || !component.Slots.TryGetValue(args.SlotId, out var slot))
+            return;
+
+        if (args.TryEject && slot.HasItem)
+            TryEjectToHands(uid, slot, args.User, true, false);
+        else if (args.TryInsert && !slot.HasItem && args.Used != null)
+            TryInsertWithConditions(uid, component, args.User, args.Used.Value, false);
+    }
+
+    private void OnBeforeBeingButchered(Entity<ItemSlotsComponent> ent, ref BeforeBeingButcheredEvent args)
+    {
+        if (ent.Comp.Slots.Values is not { } slots)
+            return;
+
+        var coord = Transform(ent.Owner).Coordinates;
+
+        foreach (var slot in slots)
+        {
+            if (slot.ContainerSlot != null)
+                _containers.EmptyContainer(slot.ContainerSlot, destination: coord);
+        }
     }
 
     public bool TryInsertWithConditions(EntityUid uid, ItemSlotsComponent itemSlots, EntityUid user, EntityUid toInsert, bool doAfter = true)
@@ -69,7 +107,9 @@ public sealed partial class ItemSlotsSystem
 
         foreach (var slot in slots)
         {
-            TryInsertOrDoAfter(uid, (user, hands), toInsert, slot, doAfter);
+            // Pirate: Report a successful insertion so callers do not roll it back.
+            if (TryInsertOrDoAfter(uid, (user, hands), toInsert, slot, doAfter))
+                return true;
         }
 
         return false;
@@ -87,6 +127,16 @@ public sealed partial class ItemSlotsSystem
         // Drop the held item onto the floor. Return if the user cannot drop.
         if (_handsSystem.IsHolding(user, toInsert) && !_handsSystem.TryDrop(user, toInsert)) // Goobstation - don't try to drop if not holding
             return false;
+
+        //Pirate
+        if (TryComp<MetaDataComponent>(toInsert, out var meta) &&
+            TryComp<TransformComponent>(toInsert, out var xform) &&
+            (meta.Flags & MetaDataFlags.InContainer) != 0 &&
+            _containers.TryGetContainingContainer((toInsert, xform, meta), out var oldContainer))
+        {
+            _containers.Remove((toInsert, xform, meta), oldContainer, reparent: false);
+        }
+        //Pirate end
 
         if (slot.Item != null)
             _handsSystem.TryPickupAnyHand(user, slot.Item.Value, handsComp: user.Comp);
@@ -138,27 +188,5 @@ public sealed partial class ItemSlotsSystem
         }
 
         return false;
-    }
-
-    private void OnReclaimed(EntityUid uid, ItemSlotsComponent component, GotReclaimedEvent args)
-    {
-        foreach (var slot in component.Slots.Values)
-        {
-            if (slot.ContainerSlot != null)
-                _containers.EmptyContainer(slot.ContainerSlot, destination: args.ReclaimerCoordinates);
-        }
-    }
-
-    private void HandleDoAfter(EntityUid uid, ItemSlotsComponent component, ItemSlotInteractionDoAfterEvent args)
-    {
-        if (args.Handled
-            || args.Cancelled
-            || !component.Slots.TryGetValue(args.SlotId, out var slot))
-            return;
-
-        if (args.TryEject && slot.HasItem)
-            TryEjectToHands(uid, slot, args.User, true, false);
-        else if (args.TryInsert && !slot.HasItem && args.Used != null)
-            TryInsertWithConditions(uid, component, args.User, args.Used.Value, false);
     }
 }

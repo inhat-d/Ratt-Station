@@ -12,9 +12,43 @@
   - type: Hunger
   - type: Inventory # Allows vulps to wear properly shaped helmets
     speciesId: vulpkanin
+    # Pirate edit start - resprite
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit-female
+      jumpskirt:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpskirt-female
+      shoes:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
+    displacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      jumpskirt:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpskirt
+      shoes:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
+    # Pirate edit end
   - type: Thirst
   - type: Icon
-    sprite: _DV/Mobs/Species/Vulpkanin/parts.rsi
+    sprite: _Pirate/Mobs/Species/Vulpkanin/parts.rsi # Pirate - resprite
     state: full
   - type: Body
     prototype: Vulpkanin
@@ -45,15 +79,16 @@
       - map: [ "enum.HumanoidVisualLayers.RLeg" ]
       - map: [ "enum.HumanoidVisualLayers.LLeg" ]
       - shader: StencilClear
-        sprite: Mobs/Species/Human/parts.rsi #PJB on stencil clear being on the left leg: "...this is 'fine'" -https://github.com/space-wizards/space-station-14/pull/12217#issuecomment-1291677115
-        # its fine, but its still very stupid that it has to be done like this instead of allowing sprites to just directly insert a stencil clear.
-        # sprite refactor when
+        sprite: _Pirate/Mobs/Species/Vulpkanin/parts.rsi # Pirate - resprite
         state: l_leg
       - shader: StencilMask
         map: [ "enum.HumanoidVisualLayers.StencilMask" ]
         sprite: _DV/Mobs/Customization/Vulpkanin/masking_helpers.rsi
         state: female_full
         visible: false
+      # Pirate: underwear customization.
+      - map: [ "enum.HumanoidVisualLayers.UndergarmentBottom" ]
+      - map: [ "enum.HumanoidVisualLayers.UndergarmentTop" ]
       - map: [ "jumpsuit" ]
       - map: [ "enum.HumanoidVisualLayers.LHand" ]
       - map: [ "enum.HumanoidVisualLayers.RHand" ]
@@ -143,3 +178,38 @@
   components:
   - type: HumanoidAppearance
     species: Vulpkanin
+  # Pirate edit start - resprite
+  - type: Inventory
+    femaleDisplacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit-female
+      jumpskirt:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpskirt-female
+      shoes:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
+    displacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      jumpskirt:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpskirt
+      shoes:
+        sizeMaps:
+          32:
+            sprite: _Pirate/Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
+    # Pirate edit end

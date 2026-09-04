@@ -10,6 +10,7 @@
   markingLimits: MobShadowkinMarkingLimits
   dollPrototype: MobShadowkinDummy
   skinColoration: Hues
+  knowledge: Human # Pirate
   naming: First
   maleFirstNames: NamesShadowkin
   femaleFirstNames: NamesShadowkin
@@ -65,6 +66,13 @@
       defaultMarkings: [EarsShadowkin]
     Chest:
       points: 8
+      required: false
+    # Pirate: enable underwear customization.
+    UndergarmentTop:
+      points: 1
+      required: false
+    UndergarmentBottom:
+      points: 1
       required: false
     Legs:
       points: 8

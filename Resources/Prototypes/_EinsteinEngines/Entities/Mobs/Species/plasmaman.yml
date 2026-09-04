@@ -1,5 +1,5 @@
 - type: entity
-  parent: BaseMobSpeciesOrganic
+  parent: [ BaseMobSpeciesNonPerishable ]
   id: BaseMobPlasmaman
   name: Urist McPlasma
   abstract: true
@@ -28,6 +28,9 @@
       sprite: Mobs/Customization/masking_helpers.rsi
       state: unisex_full
       visible: false
+    # Pirate: underwear customization.
+    - map: [ "enum.HumanoidVisualLayers.UndergarmentBottom" ]
+    - map: [ "enum.HumanoidVisualLayers.UndergarmentTop" ]
     - map: ["enum.HumanoidVisualLayers.LFoot"]
     - map: ["enum.HumanoidVisualLayers.RFoot"]
     - map: ["jumpsuit"] # jumpsuit after foot to show envirosuit shoes
@@ -62,7 +65,6 @@
       sprite: "Effects/creampie.rsi"
       state: "creampie_human"
       visible: false
-  - type: Carriable
   - type: Body
     prototype: Plasmaman
     requiredLegs: 2

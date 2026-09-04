@@ -5,6 +5,8 @@
   parent: BaseItem
   abstract: true
   components:
+  - type: WeaponClass # Pirate
+    class: Laser
   - type: Sprite
   - type: Item
     size: Huge
@@ -25,6 +27,9 @@
   - type: Battery
     maxCharge: 1000
     startingCharge: 1000
+  - type: CyberdeckHackable # Pirate - Cyberdeck
+    cost: 3
+    delay: 3
   - type: StaticPrice
     price: 500
   - type: Cautery # Shitmed
@@ -718,7 +723,7 @@
     slots:
       flashlight:
         name: weapon-upgrade-slot-name-flashlight
-        priority: 5
+        priority: 0 # DOWNSTREAM-TPirates: gun flashlights - lowest eject priority
         ejectOnBreak: true
         occludesLight: false
         whitelist:
@@ -1113,6 +1118,8 @@
   - type: Battery
     maxCharge: 1200 # Goobstation
     startingCharge: 1200 # Goobstation
+  - type: StealTarget # Pirate: Restore the energy shotgun steal objective target.
+    stealGroup: WeaponEnergyShotgun
 
 - type: entity
   name: energy magnum
@@ -1140,8 +1147,8 @@
     tags:
     - HighRiskItem
     - Sidearm
-  - type: StealTarget
-    stealGroup: WeaponEnergyMagnum
+#  - type: StealTarget # Goobstation - Remove Energy Magnum
+#    stealGroup: WeaponEnergyMagnum # Goobstation - Remove Energy Magnum
   - type: Gun
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/laser_cannon.ogg
@@ -1181,6 +1188,7 @@
   - type: Appearance
   - type: Item
     size: Large
+    sprite: _Goobstation/Objects/Weapons/Guns/Battery/tempgun.rsi # Goobstation
     shape:
     - 0,0,3,1
   - type: MagazineVisuals

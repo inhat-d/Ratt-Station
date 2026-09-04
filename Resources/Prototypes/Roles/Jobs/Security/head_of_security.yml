@@ -41,13 +41,14 @@
     # Pirate contractor start
     - !type:CharacterEmployerRequirement
       employers:
-      - NanoTrasen
+      - IdrisIncorporated
       - ZavodskiyInterstellar
       - PMCG
     # Pirate contractor end
   weight: 10
   startingGear: HoSGear
   icon: "JobIconHeadOfSecurity"
+  ransomModifier: 4 # Pirate: traitor ransom value
   supervisors: job-supervisors-captain
   canBeAntag: false
   guides: # goobstation
@@ -78,6 +79,8 @@
     components:
       - type: CommandStaff
       - type: SecurityStaff # goobstation
+  - !type:ModifyPsionicChanceSpecial # Pirate - Commands are much more likely to be psionic.
+    jobBonusChance: 0.1
 
 - type: startingGear
   id: HoSGear
@@ -90,6 +93,7 @@
   storage:
     back:
     - Flash
+    - BaseSeclinkRadio # Pirate: SecLink for security staff
 #    - MagazinePistol # PIRATE, moved to loadouts
 
 - type: chameleonOutfit

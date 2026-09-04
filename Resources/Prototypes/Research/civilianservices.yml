@@ -63,6 +63,7 @@
   - SurveillanceWirelessCameraAnchoredCircuitboard
   - SurveillanceCameraMonitorCircuitboard
   - SurveillanceWirelessCameraMonitorCircuitboard
+  - SurveillanceWirelessCameraHandheld # Pirate: SELF
   - TelecomServerCircuitboard
   - HolopadMachineCircuitboard
   - BladeServerRackMachineCircuitboard # Pirate
@@ -298,7 +299,7 @@
   position: -4,7
   technologyPrerequisites:
   - MeatManipulation
-  - BluespaceChemistry
+
 
 
 # Tier 3

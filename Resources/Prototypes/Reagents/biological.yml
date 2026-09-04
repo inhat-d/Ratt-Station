@@ -22,92 +22,17 @@
       - !type:SatiateThirst
         factor: 0.5
         conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Human ]
-          inverted: true
-      - !type:SatiateHunger # Pirate
-        factor: 1.5
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vampiric ]
-        - !type:HasVampireToxin
-          invert: true
-        - !type:HasTastyBlood
-      - !type:AdjustReagent
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vampiric ]
-        - !type:HasVampireToxin
-          invert: true
-        - !type:HasTastyBlood
-        reagent: Water
-        amount: 0.5
-      - !type:AdjustReagent
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vampiric ]
-        - !type:HasVampireToxin
-          invert: true
-        - !type:HasTastyBlood
-        reagent: Omnizine
-        amount: 0.3
-      - !type:ModifyBleed
-        amount: -0.05
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vampiric ]
-        - !type:HasVampireToxin
-          invert: true
-        - !type:HasTastyBlood
-      - !type:ModifyBloodLevel
-        amount: 0.05
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vampiric ]
-        - !type:HasVampireToxin
-          invert: true
-        - !type:HasTastyBlood # Pirate end
-      - !type:ChemAddMoodlet # Pirate - port EE mood system
-        moodPrototype: DrankBlood
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Human ]
-      - !type:ChemAddMoodlet # Pirate - port EE mood system
-        moodPrototype: DrankBloodVampiric
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Vampiric ]
-        - !type:HasVampireToxin
-          invert: true
-        - !type:HasTastyBlood # Pirate
+          - !type:MetabolizerTypeCondition
+            type: [ Human ]
+            inverted: true
     Food:
       effects:
         - !type:AdjustReagent
           reagent: UncookedAnimalProteins
           amount: 0.1
           conditions:
-          - !type:MetabolizerTypeCondition # Pirate
-            type: [ Vampiric ]
-            inverted: true
-        - !type:AdjustReagent
-          reagent: UncookedAnimalProteins
-          amount: 0.1
-          conditions:
-          - !type:MetabolizerTypeCondition # Pirate
-            type: [ Vampiric ]
-          - !type:HasVampireToxin
-            invert: true
-          - !type:HasTastyBlood # Pirate end
-    Medicine:
-      effects:
-      - !type:HealthChange
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Bloodsucker ]
-        damage:
-          groups:
-            Brute: -3
-            Burn: -1.25
+            - !type:MetabolizerTypeCondition
+              type: [ Vampiric ]
   plantMetabolism:
     - !type:PlantAdjustWater
       amount: 0.5
@@ -126,11 +51,6 @@
   color: "#808A51"
   recognizable: true
   physicalDesc: reagent-physical-desc-slimy
-  metabolisms:
-    Drink:
-      effects:
-        - !type:ChemAddMoodlet # Pirate - port EE mood system
-          moodPrototype: DrankInsectBlood
 
 - type: reagent
   id: Slime
@@ -200,14 +120,6 @@
   color: "#162581"
   recognizable: true
   physicalDesc: reagent-physical-desc-metallic
-  metabolisms:
-    Drink:
-      effects:
-        - !type:ChemAddMoodlet # Pirate - port EE mood system
-          moodPrototype: DrankBlood
-          conditions:
-          - !type:MetabolizerTypeCondition
-            type: [ Human ]
 
 - type: reagent
   parent: Blood
@@ -219,14 +131,6 @@
   color: "#7a8bf2"
   recognizable: true
   physicalDesc: reagent-physical-desc-pungent
-  metabolisms:
-    Drink:
-      effects:
-        - !type:ChemAddMoodlet # Pirate - port EE mood system
-          moodPrototype: DrankBlood
-          conditions:
-          - !type:MetabolizerTypeCondition
-            type: [ Human ]
 
 - type: reagent
   id: ZombieBlood
@@ -242,8 +146,6 @@
       effects:
       - !type:SatiateThirst
         factor: -0.5
-      - !type:ChemAddMoodlet # Pirate - port EE mood system
-        moodPrototype: DrankZombieBlood
     Poison:
       effects:
       - !type:HealthChange
@@ -338,8 +240,6 @@
       - !type:AdjustReagent
         reagent: Nutriment
         amount: 0.1
-      - !type:ChemAddMoodlet # Pirate - port EE mood system
-        moodPrototype: DrankVomit
   footstepSound:
     collection: FootstepBlood
     params:

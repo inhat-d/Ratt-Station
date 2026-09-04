@@ -19,6 +19,8 @@
         - MachineMask
         layer:
           - MachineLayer
+  #region Pirate: lathe printing sounds
+  #endregion Pirate: lathe printing sounds
   - type: Lathe
   - type: MaterialStorage
   - type: Destructible
@@ -112,7 +114,7 @@
 
 - type: entity
   id: Autolathe
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: autolathe
   description: It produces basic items using metal and glass. Has the ability to process blueprints to print new recipes.
   components:
@@ -209,7 +211,7 @@
 
 - type: entity
   id: Protolathe
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: protolathe
   description: Converts raw materials into advanced items.
   components:
@@ -253,6 +255,7 @@
     - Janitor
     - Instruments
     - Equipment # Goobstation note: handheld mass scanner is removed
+    - WirelessCameraHandheld # Pirate: S.E.L.F. handheld camera.
     - FauxTiles
     # Goobstation Packs
     # - ServiceWeapons
@@ -352,7 +355,7 @@
 
 - type: entity
   id: ExosuitFabricator
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateSynthFabSound] # Pirate: lathe printing sounds
   name: exosuit fabricator
   description: Creates parts for robotics and other mechanical needs.
   components:
@@ -417,6 +420,8 @@
   - type: GuideHelp
     guides:
     - Robotics
+  #region Pirate: lathe printing sounds
+  #endregion Pirate: lathe printing sounds
 
 - type: entity
   id: Biofabricator
@@ -464,7 +469,7 @@
 
 - type: entity
   id: SecurityTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: security techfab
   description: Prints equipment and circuitboards for use by security crew. #Goobstation - Circuitboards description
   components:
@@ -503,6 +508,7 @@
     - GrenadeTriggersStatic
     - SecurityWeaponsStaticGoob
     # Pirate Packs
+    - SecurityEquipmentStaticPirate # Pirate: K9 durathread vest.
     - SecurityAmmoStaticPirate
     - PirateStraightjacketLatheRecipePackStatic # Pirate - tweak recipes | Add straint-jacket to med and sec fabs.
     - ModesuitModuleSecStatic # Pirate: Wega modular suit port.
@@ -527,9 +533,12 @@
     - SpecOpsGoogles
     - PowerCells
     # Pirate Packs
+    - SecurityHardsuitsPirate # Pirate: K9 combat hardsuits.
     - SecurityAmmoPirate
+    - SecurityUtilityPirate # Pirate: BR-40c energy dome generator.
     - ModesuitModuleSecReach # Pirate: Wega modular suit port.
     - ArmorPlates # Pirate: Monolith armor plates.
+    - MantisCastersPirate # Pirate: mantis psionic caster frames (PsionicCountermeasures tech).
   - type: EmagLatheRecipes # Goobstation
     emagStaticPacks:
     - SyndicateAmmoStatic
@@ -543,7 +552,7 @@
 
 - type: entity
   id: AmmoTechFab
-  parent: [BaseLatheLube]
+  parent: [BaseLatheLube, BasePirateFabricatorSound] # Pirate: lathe printing sounds
   name: ammo techfab
   description: Prints the bare minimum of bullets that any budget military or armory could need. Nothing fancy.
   components:
@@ -585,7 +594,7 @@
 
 - type: entity
   id: MedicalTechFab
-  parent: [BaseLatheLube] #Goobstation - Circuitboards description
+  parent: [BaseLatheLube, BasePirateFabricatorSound] #Goobstation - Circuitboards description # Pirate: lathe printing sounds
   name: medical techfab
   description: Prints equipment and circuitboards for use by the medbay.
   components:
@@ -625,6 +634,7 @@
     # Einstein Engines Packs
     - SyringeCase
     - PirateStraightjacketLatheRecipePackStatic # Pirate - tweak recipes | Add straint-jacket to med and sec fabs.
+    - MedicalEquipmentStaticPirate # Pirate: AAC tablet.
     dynamicPacks:
     - Chemistry
     # Goobstation Packs
@@ -633,8 +643,10 @@
     - EnvirosuitExtinguisherRefill
     - MedicalMisc
     - MedicalMiscRestricted
+    - DefibrillatorBeltsPirate # Pirate - belt defibrillators
     - MedicalVehiclesAdvanced
     - MedicalBoards
+    - MedicalBoardsGoob
     - Janitor
     - Genetics
     - MedicalCloning
@@ -693,6 +705,7 @@
     - Scarves
     - Carpets
     - Bedsheets
+    - DoubleBedsheets # Pirate port: двоспальні ковдри з ADT
     - TentsStatic   #DEN
     # Goobstation Packs
     - ClothingCasualJumpsuits
@@ -887,6 +900,7 @@
     - FloorConcreteTilesStatic
     - CircuitFloorsStatic
     - FloorMarbleTilesStatic
+    - DenFloorPoolTilesStatic # DEN
     dynamicPacks:
     - FauxTiles
   - type: MaterialStorage

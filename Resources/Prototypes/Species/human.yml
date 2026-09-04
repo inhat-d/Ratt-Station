@@ -9,6 +9,7 @@
   markingLimits: MobHumanMarkingLimits
   dollPrototype: MobHumanDummy
   skinColoration: HumanToned
+  knowledge: Human # Pirate
   # begin Goobstation: port EE height/width sliders
   minHeight: 0.90
   defaultHeight: 1
@@ -27,6 +28,8 @@
 - type: speciesBaseSprites
   id: MobHumanSprites
   sprites:
+    TailBehind: MobHumanoidAnyMarking # floof
+    TailOversuit: MobHumanoidAnyMarking # floof
     Special: MobHumanoidAnyMarking
     Head: MobHumanHead
     Face: MobHumanoidAnyMarking
@@ -53,6 +56,13 @@
 - type: markingPoints
   id: MobHumanMarkingLimits
   points:
+    # Pirate - Trauma Station hair gradients
+    HairSpecial:
+      points: 1
+      required: false
+    FacialHairSpecial:
+      points: 1
+      required: false
     Hair:
       points: 1
       required: false

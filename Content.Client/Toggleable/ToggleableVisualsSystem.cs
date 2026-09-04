@@ -3,11 +3,14 @@ using Content.Client.Clothing;
 using Content.Client.Items.Systems;
 using Content.Shared.Clothing;
 using Content.Shared.Hands;
+using Content.Shared.Humanoid; // Pirate
+using Content.Shared.Humanoid.Prototypes; // Pirate
 using Content.Shared.Inventory;
 using Content.Shared.Item;
 using Content.Shared.Light.Components;
 using Content.Shared.Toggleable;
 using Robust.Client.GameObjects;
+using Robust.Shared.Prototypes; // Pirate
 using Robust.Shared.Utility;
 
 namespace Content.Client.Toggleable;
@@ -22,6 +25,7 @@ public sealed class ToggleableVisualsSystem : VisualizerSystem<ToggleableVisuals
 {
     [Dependency] private readonly SharedItemSystem _item = default!;
     [Dependency] private readonly SharedPointLightSystem _pointLight = default!;
+    [Dependency] private readonly IPrototypeManager _prototypeManager = default!; // Pirate
 
     public override void Initialize()
     {
@@ -49,6 +53,11 @@ public sealed class ToggleableVisualsSystem : VisualizerSystem<ToggleableVisuals
             SpriteSystem.LayerSetVisible((uid, args.Sprite), layer, enabled);
             if (modulateColor)
                 SpriteSystem.LayerSetColor((uid, args.Sprite), component.SpriteLayer, color);
+
+            if (component.ReplaceMode && args.Sprite.AllLayers.Any()) // Pirate
+            {
+                SpriteSystem.LayerSetVisible((uid, args.Sprite), 0, !enabled);
+            }
         }
 
         // If there's a `ItemTogglePointLightComponent` that says to apply the color to attached lights, do so.
@@ -81,13 +90,37 @@ public sealed class ToggleableVisualsSystem : VisualizerSystem<ToggleableVisuals
             return;
         List<PrototypeLayerData>? layers = null;
 
-        // attempt to get species specific data
-        if (inventory.SpeciesId != null)
-            component.ClothingVisuals.TryGetValue($"{args.Slot}-{inventory.SpeciesId}", out layers);
+        // Pirate edit start - clothing fallback
+        var speciesId = inventory.SpeciesId ?? CompOrNull<HumanoidAppearanceComponent>(args.Equipee)?.Species.ToString();
+
+        // Try the equipped species first, then its optional clothing fallback.
+        if (speciesId != null)
+        {
+            foreach (var species in ClothingSpeciesHelper.GetClothingSpecies(_prototypeManager, speciesId, args.Slot))
+            {
+                if (component.ClothingVisuals.TryGetValue($"{args.Slot}-{species}", out layers))
+                    break;
+            }
+        }
+        // Pirate edit - clothing fallback
 
         // No species specific data.  Try to default to generic data.
         if (layers == null && !component.ClothingVisuals.TryGetValue(args.Slot, out layers))
             return;
+
+        // Pirate
+        if (component.ReplaceMode)
+        {
+            for (var layerIdx = args.Layers.Count - 1; layerIdx >= 0; layerIdx--)
+            {
+                var (layerKey, _) = args.Layers[layerIdx];
+                if (layerKey.StartsWith($"{args.Slot}-") && !layerKey.Contains("-toggle"))
+                {
+                    args.Layers.RemoveAt(layerIdx);
+                }
+            }
+        }
+        // Pirate end
 
         var modulateColor = AppearanceSystem.TryGetData<Color>(uid, ToggleableVisuals.Color, out var color, appearance);
 
@@ -118,6 +151,21 @@ public sealed class ToggleableVisualsSystem : VisualizerSystem<ToggleableVisuals
         if (!component.InhandVisuals.TryGetValue(args.Location, out var layers))
             return;
 
+        // Pirate
+        if (component.ReplaceMode)
+        {
+            var prefix = $"inhand-{args.Location.ToString().ToLowerInvariant()}";
+            for (var layerIdx = args.Layers.Count - 1; layerIdx >= 0; layerIdx--)
+            {
+                var (layerKey, _) = args.Layers[layerIdx];
+                if (layerKey.StartsWith(prefix) && !layerKey.Contains("-toggle"))
+                {
+                    args.Layers.RemoveAt(layerIdx);
+                }
+            }
+        }
+        // Pirate end
+
         var modulateColor = AppearanceSystem.TryGetData<Color>(uid, ToggleableVisuals.Color, out var color, appearance);
 
         var i = 0;
@@ -137,4 +185,5 @@ public sealed class ToggleableVisualsSystem : VisualizerSystem<ToggleableVisuals
             args.Layers.Add((key, layer));
         }
     }
+
 }

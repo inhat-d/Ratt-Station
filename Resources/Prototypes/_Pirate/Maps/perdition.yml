@@ -2,6 +2,8 @@
   id: PerditionTP
   mapName: 'Perdition Island'
   mapPath: /Maps/_Pirate/perdition.yml
+  mapIcon: /Textures/_Pirate/Interface/MapVote/pirate_flag.png
+  mapPreview: PirateMapPreviewPerditionTP
   minPlayers: 0
   maxPlayers: 20
   stations:
@@ -61,8 +63,9 @@
             Lawyer: [ 0, 0 ]
             Brigmedic: [ 1, 1 ]
           #logistics
-            SalvageSpecialist: [ 3, 3 ]
+            SalvageSpecialist: [ 2, 2 ]
             CargoTechnician: [ 2, 3 ]
+            ShaftMiner:  [ 1, 2 ]
           #civilian
             Passenger: [ -1, -1 ]
             Clown: [ 1, 1 ]

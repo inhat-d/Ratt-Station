@@ -209,3 +209,61 @@
       - ContractorUplink
       - NukeOpsUplink
       - ContravendUplink
+
+- type: listing
+  id: UplinkAutosurgeonCyberdeck
+  name: uplink-autosurgeon-cyberdeck-name
+  description: uplink-autosurgeon-cyberdeck-desc
+  icon:
+    sprite: _EinsteinEngines/Mobs/Species/IPC/organs.rsi
+    state: eyes
+  productEntity: AutosurgeonCyberdeck
+  cost:
+    Telecrystal: 66
+  categories:
+  - UplinkImplants
+  conditions:
+  - !type:StoreWhitelistCondition
+    blacklist:
+      tags:
+      - NukeOpsUplink
+  - !type:BuyerWhitelistCondition
+    blacklist:
+      components:
+      - SurplusBundle
+
+- type: listing
+  id: UplinkSecuritySpaceBladeSyndicate
+  name: uplink-spaceblade-syndicate-name
+  description: uplink-spaceblade-syndicate-desc
+  productEntity: SpaceBladeContra
+  icon: { sprite: _Pirate/Objects/Fun/spaceblade.rsi, state: contraband }
+  cost:
+    Telecrystal: 1
+  categories:
+  - UplinkPointless
+
+- type: listing
+  id: UplinkDetomatixCartridge
+  name: uplink-detomatix-name
+  description: uplink-detomatix-desc
+  productEntity: DetomatixCartridge
+  icon: { sprite: _Pirate/Objects/Devices/cartridge_detomatix.rsi, state: cart-detomatix }
+  cost:
+    Telecrystal: 6
+  categories:
+  - UplinkExplosives
+  conditions:
+  - !type:ListingLimitedStockCondition
+    stock: 1
+
+- type: listing
+  id: UplinkDefibrillatorBeltCombat
+  name: uplink-defibrillator-belt-combat-name
+  description: uplink-defibrillator-belt-combat-desc
+  icon: { sprite: _Pirate/Objects/Specific/Medical/defibcombat.rsi, state: icon }
+  productEntity: DefibrillatorBeltCombat
+  cost:
+    Telecrystal: 30
+  categories:
+  - UplinkWearables

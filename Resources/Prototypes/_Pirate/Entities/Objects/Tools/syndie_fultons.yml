@@ -1,0 +1,19 @@
+- type: entity
+  parent: BaseItem
+  id: SyndieFulton
+  name: fulton
+  description: Used to extract containers, items, or forcibly recruit people into your base of operations. A tiny waffle-shaped maker's mark is stamped beneath the handle.
+  components:
+  - type: Sprite
+    sprite: Objects/Tools/fulton.rsi # TODO: unique sprite
+    state: extraction_pack
+  - type: Item
+    size: Normal
+  - type: LimitedCharges
+    maxCharges: 1
+  - type: AutoRecharge
+    rechargeDuration: 60 # 1 minute between extracts if you steal multiple things
+  - type: ExtractionFulton
+  - type: MappingCategories
+    categories:
+    - Syndicate

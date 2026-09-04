@@ -10,6 +10,7 @@
   markingLimits: MobArachnidMarkingLimits
   dollPrototype: MobArachnidDummy
   skinColoration: Hues
+  knowledge: Arachnid # Pirate
   maleFirstNames: NamesArachnidFirst
   femaleFirstNames: NamesArachnidFirst
   lastNames: NamesArachnidLast
@@ -19,6 +20,8 @@
 - type: speciesBaseSprites
   id: MobArachnidSprites
   sprites:
+    TailBehind: MobHumanoidAnyMarking # floof
+    TailOversuit: MobHumanoidAnyMarking # floof
     Head: MobArachnidHead
     Face: MobHumanoidAnyMarking #Pirate Changes
     Snout: MobHumanoidAnyMarking
@@ -50,6 +53,10 @@
   id: MobArachnidMarkingLimits
   onlyWhitelisted: true
   points:
+    # Pirate - Trauma Station hair gradients
+    HairSpecial:
+      points: 1
+      required: false
     Hair:
       points: 1
       required: false

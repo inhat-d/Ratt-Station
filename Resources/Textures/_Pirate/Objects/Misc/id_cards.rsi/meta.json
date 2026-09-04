@@ -12,12 +12,21 @@
     },
 	{
       "name": "ipofficer"
-    },
+	},
+	{
+      "name": "idrevolutionary"
+	},
 	{
       "name": "blacksecure"
-    },
+	},
     {
             "name": "idadminassistant"
+    },
+    {
+      "name": "stripe_bottom"
+    },
+    {
+      "name": "stripe_top"
     }
   ]
 }

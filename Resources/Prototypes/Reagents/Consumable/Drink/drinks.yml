@@ -11,7 +11,6 @@
   recognizable: true
   metabolisms:
     Drink:
-      metabolismRate: 0.05 # Goobstation: Very slow metabolism
       effects:
       - !type:SatiateThirst
         factor: 2
@@ -65,6 +64,9 @@
         - !type:ReagentCondition
           reagent: Coffee
           min: 100
+      - !type:AdjustReagent # Goobstation: Caffeine
+        reagent: Caffeine
+        amount: 0.5
   metamorphicSprite:
     sprite: Objects/Consumable/Drinks/coffeeglass.rsi
     state: icon_empty
@@ -400,14 +402,6 @@
             Heat: -0.30
             Shock: -0.30
             Caustic: -0.30
-      - !type:ChemAddMoodlet # Pirate - port EE mood system
-        conditions:
-        - !type:MetabolizerTypeCondition
-          type: [ Plasmaman ]
-        - !type:ReagentCondition
-          reagent: Milk
-          min: 4
-        moodPrototype: PlasmamanIngestMilk
 
 - type: reagent
   id: MilkGoat

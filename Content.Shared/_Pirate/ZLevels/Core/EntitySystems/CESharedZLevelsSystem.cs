@@ -53,11 +53,9 @@ public abstract partial class CESharedZLevelsSystem : EntitySystem
 
     protected EntityQuery<CEZPhysicsComponent> ZPhysQuery;
 
-    /// <summary>Accumulator for fixed-timestep z-physics; see <see cref="Update"/> in Movement.cs.</summary>
-    private TimeSpan _accumulatedTime;
+    private float _zPhysicsTickRate = 30f;
 
-    /// <summary>Size of a single z-physics substep. Driven by <see cref="SharedCCVars.CEZPhysicsTickRate"/>.</summary>
-    private TimeSpan _fixedTimestep = TimeSpan.FromSeconds(1d / 30d);
+    private float _fixedTimestep = 1f / 30f;
 
     public override void Initialize()
     {
@@ -103,8 +101,19 @@ public abstract partial class CESharedZLevelsSystem : EntitySystem
 
     private void OnPhysicsTickRateChanged(float hz)
     {
-        var clamped = MathF.Max(1f, hz);
-        _fixedTimestep = TimeSpan.FromSeconds(1d / clamped);
+        _zPhysicsTickRate = Math.Clamp(hz, 1f, 240f);
+        _fixedTimestep = 1f / _zPhysicsTickRate;
+    }
+
+    /// <summary>Derives deterministic substeps from the simulation tick for prediction replay.</summary>
+    public static int GetZPhysicsStepsForTick(uint tick, float zPhysicsTickRate, float engineTickRate)
+    {
+        var engineRate = Math.Max(1d, engineTickRate);
+        var zRate = Math.Clamp((double) zPhysicsTickRate, 1d, 240d);
+        var ratio = zRate / engineRate;
+        var previousTotal = Math.Floor(tick * ratio + 1e-9d);
+        var currentTotal = Math.Floor((tick + 1d) * ratio + 1e-9d);
+        return Math.Clamp((int) (currentTotal - previousTotal), 0, MaxStepsPerFrame);
     }
 
     private void OnZLevelMapShutdown(Entity<CEZLevelMapComponent> ent, ref ComponentShutdown args)
@@ -431,7 +440,7 @@ public abstract partial class CESharedZLevelsSystem : EntitySystem
         return false;
     }
 
-    private bool HasTraversalContext(TransformComponent xform)
+    protected bool HasTraversalContext(TransformComponent xform) // Pirate: multiz - also used by server-side z systems
     {
         if (xform.MapUid is { } mapUid &&
             (_zMapQuery.HasComp(mapUid) || _ftlMapQuery.HasComp(mapUid)))
@@ -440,6 +449,17 @@ public abstract partial class CESharedZLevelsSystem : EntitySystem
         }
 
         return xform.GridUid is { } gridUid && HasComp<CEZLinkedGridComponent>(gridUid);
+    }
+
+    /// <summary>
+    /// True when this entity sits on a map/grid that participates in a z-network, i.e. when "up"
+    /// and "down" mean anything for it. Multiz features must no-op when this is false, otherwise
+    /// they act on plain single-level maps where there is nothing above or below. // Pirate: multiz
+    /// </summary>
+    [PublicAPI]
+    public bool IsInTraversalContext(Entity<TransformComponent?> ent)
+    {
+        return Resolve(ent, ref ent.Comp, false) && HasTraversalContext(ent.Comp);
     }
 
     /// <summary>

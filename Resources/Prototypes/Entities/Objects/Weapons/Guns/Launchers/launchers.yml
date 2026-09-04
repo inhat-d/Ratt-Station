@@ -7,6 +7,8 @@
   description: A rooty tooty point and shooty.
   abstract: true
   components:
+  - type: WeaponClass # Pirate
+    class: Heavy
   - type: Sprite
   - type: Clothing
     sprite: Objects/Weapons/Guns/Launchers/china_lake.rsi
@@ -386,6 +388,9 @@
     fireRate: 0.5
     soundGunshot:
       path: /Audio/Weapons/Guns/Gunshots/rpgfire.ogg
+  - type: RestrictGunshotsByUserTag # Pirate - allow Oni to use the emergency engineering launcher.
+    doesntContain: []
+    messages: []
   - type: BallisticAmmoProvider
     whitelist:
       tags:
